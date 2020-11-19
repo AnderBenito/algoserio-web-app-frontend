@@ -1,20 +1,22 @@
 import React, { useState } from "react";
 import registerForm from "../models/registerForm.model";
-import { useQuery, gql } from "@apollo/client";
-interface Props {}
+import { useMutation, gql } from "@apollo/client";
+import { RouteComponentProps } from "react-router-dom";
 
-const Register: React.FC<Props> = () => {
-	const data = useQuery(gql`
-		query {
-			getAllUsers {
-				id
-				name
-				username
-				points {
-					reason
-					amount
-				}
-			}
+const Register: React.FC<RouteComponentProps> = (props) => {
+	const [registerMutation, { loading }] = useMutation(gql`
+		mutation RegisterUser(
+			$name: String!
+			$email: String!
+			$username: String!
+			$password: String!
+		) {
+			registerUser(
+				name: $name
+				email: $email
+				username: $username
+				password: $password
+			)
 		}
 	`);
 	const [form, setForm] = useState<registerForm>({
@@ -32,10 +34,49 @@ const Register: React.FC<Props> = () => {
 		});
 	};
 
-	const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+	const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		console.log(form, data);
-		if (form.password !== confirmationPassword) console.log("Dont match");
+		console.log(isFormValid());
+		if (form.password !== confirmationPassword || !isFormValid()) {
+			console.log("Dont match");
+			return;
+		}
+
+		try {
+			await registerMutation({
+				variables: {
+					name: form.name,
+					username: form.username,
+					email: form.email,
+					password: form.password,
+				},
+			});
+		} catch (e) {
+			console.log(e);
+			return;
+		}
+
+		console.log("Register successful");
+		props.history.push("/auth/login");
+		clearForm();
+	};
+
+	const clearForm = () => {
+		setForm({
+			name: "",
+			username: "",
+			password: "",
+			email: "",
+		});
+	};
+
+	const isFormValid = () => {
+		return (
+			form.email !== "" &&
+			form.username !== "" &&
+			form.name !== "" &&
+			form.password !== ""
+		);
 	};
 
 	return (

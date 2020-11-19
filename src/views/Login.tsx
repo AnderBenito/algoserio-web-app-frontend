@@ -1,11 +1,22 @@
+import { useMutation, gql } from "@apollo/client";
 import React, { useState } from "react";
+import { RouteComponentProps } from "react-router-dom";
 import loginForm from "../models/loginForm.model";
 
-const Login: React.FC = () => {
+const Login: React.FC<RouteComponentProps> = (props) => {
 	const [form, setForm] = useState<loginForm>({
 		username: "",
 		password: "",
 	});
+
+	const [loginMutation, { loading, error }] = useMutation(gql`
+		mutation UserLogin($username: String!, $password: String!) {
+			loginUser(username: $username, password: $password) {
+				accessToken
+			}
+		}
+	`);
+
 	const onFormInput = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setForm({
 			...form,
@@ -13,9 +24,64 @@ const Login: React.FC = () => {
 		});
 	};
 
-	const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+	const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		console.log(form);
+		let res = null;
+		try {
+			res = await loginMutation({
+				variables: {
+					username: form.username,
+					password: form.password,
+				},
+			});
+		} catch (e) {
+			console.log(e);
+			return;
+		}
+
+		console.log("Logging Successful");
+		clearForm();
+		console.log(res);
+		props.history.push("/");
+	};
+
+	const clearForm = () => {
+		setForm({
+			username: "",
+			password: "",
+		});
+	};
+
+	const renderButton = () => {
+		if (loading) {
+			return (
+				<button className="btn btn-primary w-100" type="button" disabled>
+					<span
+						className="spinner-border spinner-border-sm"
+						role="status"
+						aria-hidden="true"
+					></span>
+					Loading...
+				</button>
+			);
+		} else {
+			return (
+				<button className="btn btn-primary w-100" type="submit">
+					Login
+				</button>
+			);
+		}
+	};
+
+	const renderError = (errorMessage: string) => {
+		if (error) {
+			return (
+				<div className="alert alert-danger" role="alert">
+					{errorMessage}
+				</div>
+			);
+		}
 	};
 
 	return (
@@ -41,9 +107,8 @@ const Login: React.FC = () => {
 						value={form.password}
 					/>
 				</div>
-				<button className="btn btn-primary w-100" type="submit">
-					Login
-				</button>
+				{renderButton()}
+				{renderError("Usuario o contraseña no válidos")}
 			</form>
 		</div>
 	);
