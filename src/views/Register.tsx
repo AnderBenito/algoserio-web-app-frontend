@@ -1,8 +1,22 @@
 import React, { useState } from "react";
 import registerForm from "../models/registerForm.model";
+import { useQuery, gql } from "@apollo/client";
 interface Props {}
 
 const Register: React.FC<Props> = () => {
+	const data = useQuery(gql`
+		query {
+			getAllUsers {
+				id
+				name
+				username
+				points {
+					reason
+					amount
+				}
+			}
+		}
+	`);
 	const [form, setForm] = useState<registerForm>({
 		name: "",
 		email: "",
@@ -20,52 +34,57 @@ const Register: React.FC<Props> = () => {
 
 	const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		console.log(form);
+		console.log(form, data);
 		if (form.password !== confirmationPassword) console.log("Dont match");
 	};
 
 	return (
-		<div>
+		<div className="container p-4">
 			<form onSubmit={onSubmit}>
-				<div className="card">
+				<div className="form-group">
 					<label>Nombre</label>
 					<input
+						className="form-control"
 						name="name"
 						type="text"
 						onChange={onFormInput}
 						value={form.name}
 					/>
 				</div>
-				<div className="card">
+				<div className="form-group">
 					<label>Email</label>
 					<input
+						className="form-control"
 						name="email"
 						type="text"
 						onChange={onFormInput}
 						value={form.email}
 					/>
 				</div>
-				<div className="card">
+				<div className="form-group">
 					<label>Usuario</label>
 					<input
+						className="form-control"
 						name="username"
 						type="text"
 						onChange={onFormInput}
 						value={form.username}
 					/>
 				</div>
-				<div className="card">
+				<div className="form-group">
 					<label>Contrasena</label>
 					<input
+						className="form-control"
 						name="password"
 						type="password"
 						onChange={onFormInput}
 						value={form.password}
 					/>
 				</div>
-				<div className="card">
+				<div className="form-group">
 					<label>Confirmar contrasena</label>
 					<input
+						className="form-control"
 						name="confirm_password"
 						type="password"
 						onChange={(e) => {
@@ -74,7 +93,7 @@ const Register: React.FC<Props> = () => {
 						value={confirmationPassword}
 					/>
 				</div>
-				<button className="btn btn-primary" type="submit">
+				<button className="btn btn-primary w-100" type="submit">
 					Login
 				</button>
 			</form>

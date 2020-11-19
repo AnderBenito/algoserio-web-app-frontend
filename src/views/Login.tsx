@@ -19,27 +19,31 @@ const Login: React.FC = () => {
 	};
 
 	return (
-		<div>
+		<div className="container p-4 mw-25">
 			<form onSubmit={onSubmit}>
-				<div>
+				<div className="form-group">
 					<label>Usuario</label>
 					<input
+						className="form-control"
 						name="username"
 						type="text"
 						onChange={onFormInput}
 						value={form.username}
 					/>
 				</div>
-				<div>
+				<div className="form-group">
 					<label>Contrasena</label>
 					<input
+						className="form-control"
 						name="password"
 						type="password"
 						onChange={onFormInput}
 						value={form.password}
 					/>
 				</div>
-				<button type="submit">Login</button>
+				<button className="btn btn-primary w-100" type="submit">
+					Login
+				</button>
 			</form>
 		</div>
 	);
