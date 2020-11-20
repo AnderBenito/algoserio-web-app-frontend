@@ -1,6 +1,8 @@
-import { useMutation, gql } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import React, { useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
+import LoadingButton from "../components/LoadingButton";
+import { LOGIN_USER } from "../graphql/mutations/UserMutations";
 import loginForm from "../models/loginForm.model";
 
 const Login: React.FC<RouteComponentProps> = (props) => {
@@ -9,13 +11,7 @@ const Login: React.FC<RouteComponentProps> = (props) => {
 		password: "",
 	});
 
-	const [loginMutation, { loading, error }] = useMutation(gql`
-		mutation UserLogin($username: String!, $password: String!) {
-			loginUser(username: $username, password: $password) {
-				accessToken
-			}
-		}
-	`);
+	const [loginMutation, { loading, error }] = useMutation(LOGIN_USER);
 
 	const onFormInput = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setForm({
@@ -53,27 +49,6 @@ const Login: React.FC<RouteComponentProps> = (props) => {
 		});
 	};
 
-	const renderButton = () => {
-		if (loading) {
-			return (
-				<button className="btn btn-primary w-100" type="button" disabled>
-					<span
-						className="spinner-border spinner-border-sm"
-						role="status"
-						aria-hidden="true"
-					></span>
-					Loading...
-				</button>
-			);
-		} else {
-			return (
-				<button className="btn btn-primary w-100" type="submit">
-					Login
-				</button>
-			);
-		}
-	};
-
 	const renderError = (errorMessage: string) => {
 		if (error) {
 			return (
@@ -85,7 +60,7 @@ const Login: React.FC<RouteComponentProps> = (props) => {
 	};
 
 	return (
-		<div className="container p-4 mw-25">
+		<div className="container p-5">
 			<form onSubmit={onSubmit}>
 				<div className="form-group">
 					<label>Usuario</label>
@@ -107,7 +82,11 @@ const Login: React.FC<RouteComponentProps> = (props) => {
 						value={form.password}
 					/>
 				</div>
-				{renderButton()}
+				<LoadingButton
+					className="btn btn-primary w-100"
+					loading={loading}
+					text="Iniciar Sesion"
+				/>
 				{renderError("Usuario o contraseña no válidos")}
 			</form>
 		</div>

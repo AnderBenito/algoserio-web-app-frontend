@@ -1,24 +1,12 @@
 import React, { useState } from "react";
 import registerForm from "../models/registerForm.model";
-import { useMutation, gql } from "@apollo/client";
+import { useMutation } from "@apollo/client";
+import { REGISTER_USER } from "../graphql/mutations/UserMutations";
 import { RouteComponentProps } from "react-router-dom";
+import LoadingButton from "../components/LoadingButton";
 
 const Register: React.FC<RouteComponentProps> = (props) => {
-	const [registerMutation, { loading }] = useMutation(gql`
-		mutation RegisterUser(
-			$name: String!
-			$email: String!
-			$username: String!
-			$password: String!
-		) {
-			registerUser(
-				name: $name
-				email: $email
-				username: $username
-				password: $password
-			)
-		}
-	`);
+	const [registerMutation, { loading }] = useMutation(REGISTER_USER);
 	const [form, setForm] = useState<registerForm>({
 		name: "",
 		email: "",
@@ -80,7 +68,7 @@ const Register: React.FC<RouteComponentProps> = (props) => {
 	};
 
 	return (
-		<div className="container p-4">
+		<div className="container p-5">
 			<form onSubmit={onSubmit}>
 				<div className="form-group">
 					<label>Nombre</label>
@@ -134,9 +122,11 @@ const Register: React.FC<RouteComponentProps> = (props) => {
 						value={confirmationPassword}
 					/>
 				</div>
-				<button className="btn btn-primary w-100" type="submit">
-					Login
-				</button>
+				<LoadingButton
+					className="btn btn-primary w-100"
+					loading={loading}
+					text="Registrarse"
+				/>
 			</form>
 		</div>
 	);
