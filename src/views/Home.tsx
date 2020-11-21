@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
+import { GlobalContext } from "../context/GlobalProvider";
 
 const Home: React.FC = () => {
+	const [user, setUser] = useContext(GlobalContext);
 	return (
 		<div className="container p-4">
 			<p className="text-justify lead">
@@ -11,6 +13,14 @@ const Home: React.FC = () => {
 				frente hace una mierda de normas así y luego solo lo firman dos
 				personas.
 			</p>
+			<button
+				className="btn btn-primary"
+				onClick={() => {
+					console.log(user);
+				}}
+			>
+				Click
+			</button>
 		</div>
 	);
 };

@@ -1,14 +1,24 @@
 import { gql } from "@apollo/client";
 
 export const GET_USERS = gql`
-	query GetAllUsers() {
-		getAllUsers(){
-            id
-            name
-            username
-            points {
-                amount
-            }
-        }
+	query {
+		getAllUsers {
+			id
+			name
+			username
+			points {
+				amount
+			}
+		}
+	}
+`;
+
+export const GET_CURRENT_USER = gql`
+	query {
+		getCurrentUser {
+			id
+			name
+			username
+		}
 	}
 `;

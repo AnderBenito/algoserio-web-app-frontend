@@ -1,7 +1,8 @@
 import { useMutation } from "@apollo/client";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import LoadingButton from "../components/LoadingButton";
+import { GlobalContext } from "../context/GlobalProvider";
 import { LOGIN_USER } from "../graphql/mutations/UserMutations";
 import loginForm from "../models/loginForm.model";
 
@@ -10,6 +11,8 @@ const Login: React.FC<RouteComponentProps> = (props) => {
 		username: "",
 		password: "",
 	});
+
+	const [user, setUser] = useContext(GlobalContext);
 
 	const [loginMutation, { loading, error }] = useMutation(LOGIN_USER);
 
@@ -22,7 +25,6 @@ const Login: React.FC<RouteComponentProps> = (props) => {
 
 	const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
-		console.log(form);
 		let res = null;
 		try {
 			res = await loginMutation({
@@ -38,7 +40,16 @@ const Login: React.FC<RouteComponentProps> = (props) => {
 
 		console.log("Logging Successful");
 		clearForm();
-		console.log(res);
+
+		//Save to local state
+		setUser({
+			accessToken: res.data.loginUser.accessToken,
+		});
+		console.log(user);
+		//Save to local storage
+		localStorage.setItem("accessToken", res.data.loginUser.accessToken);
+
+		//Push to login
 		props.history.push("/");
 	};
 

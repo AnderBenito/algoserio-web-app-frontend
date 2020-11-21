@@ -1,9 +1,18 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { routes } from "./routes";
 import NavBar from "./components/NavBar";
+import { GlobalContext } from "./context/GlobalProvider";
 
 const App: React.FC = () => {
+	const [user, setUser] = useContext(GlobalContext);
+
+	useEffect(() => {
+		setUser({
+			accessToken: localStorage.getItem("accessToken"),
+		});
+	}, []);
+
 	return (
 		<div className="App">
 			<Router>

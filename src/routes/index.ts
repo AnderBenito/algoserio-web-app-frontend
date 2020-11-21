@@ -1,6 +1,7 @@
 import Home from "../views/Home";
 import Login from "../views/Login";
 import Register from "../views/Register";
+import UserProfile from "../views/UserProfile";
 
 export const routes = [
 	{
@@ -19,6 +20,12 @@ export const routes = [
 		path: "/auth/login",
 		component: Login,
 		title: "Login",
+		needsAuth: false,
+	},
+	{
+		path: "/user",
+		component: UserProfile,
+		title: "User Profile",
 		needsAuth: false,
 	},
 ];
