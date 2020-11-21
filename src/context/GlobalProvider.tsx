@@ -1,14 +1,14 @@
 import React, { createContext, useState } from "react";
 
 interface User {
-	accessToken: string;
+	loggedIn: boolean;
 }
 
 export const GlobalContext = createContext<any>({});
 
 export const GlobalProvider: React.FC = (props) => {
 	const [user, setUser] = useState<User>({
-		accessToken: "",
+		loggedIn: false,
 	});
 
 	return (

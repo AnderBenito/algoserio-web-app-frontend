@@ -4,24 +4,30 @@ import { RouteComponentProps } from "react-router-dom";
 import LoadingButton from "../components/LoadingButton";
 import { GlobalContext } from "../context/GlobalProvider";
 import { LOGIN_USER } from "../graphql/mutations/UserMutations";
-import loginForm from "../models/loginForm.model";
+import LoginForm from "../models/loginForm.model";
+import { setAccessToken } from "../utils/accessToken";
+import { useForm } from "../utils/useForm";
 
 const Login: React.FC<RouteComponentProps> = (props) => {
-	const [form, setForm] = useState<loginForm>({
+	// const [form, setForm] = useState<LoginForm>({
+	// 	username: "",
+	// 	password: "",
+	// });
+	const [form, onFormChange, clearForm] = useForm<LoginForm>({
 		username: "",
 		password: "",
 	});
 
-	const [user, setUser] = useContext(GlobalContext);
+	const [_, setUser] = useContext(GlobalContext);
 
 	const [loginMutation, { loading, error }] = useMutation(LOGIN_USER);
 
-	const onFormInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setForm({
-			...form,
-			[event.target.name]: event.target.value,
-		});
-	};
+	// const onFormInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+	// 	setForm({
+	// 		...form,
+	// 		[event.target.name]: event.target.value,
+	// 	});
+	// };
 
 	const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
@@ -36,28 +42,22 @@ const Login: React.FC<RouteComponentProps> = (props) => {
 		} catch (e) {
 			console.log(e);
 			return;
+		} finally {
+			clearForm();
 		}
 
 		console.log("Logging Successful");
-		clearForm();
 
 		//Save to local state
 		setUser({
-			accessToken: res.data.loginUser.accessToken,
+			loggedIn: true,
 		});
-		console.log(user);
 		//Save to local storage
-		localStorage.setItem("accessToken", res.data.loginUser.accessToken);
+		//localStorage.setItem("accessToken", res.data.loginUser.accessToken);
+		setAccessToken(res.data.loginUser.accessToken);
 
 		//Push to login
 		props.history.push("/");
-	};
-
-	const clearForm = () => {
-		setForm({
-			username: "",
-			password: "",
-		});
 	};
 
 	const renderError = (errorMessage: string) => {
@@ -79,7 +79,7 @@ const Login: React.FC<RouteComponentProps> = (props) => {
 						className="form-control"
 						name="username"
 						type="text"
-						onChange={onFormInput}
+						onChange={onFormChange}
 						value={form.username}
 					/>
 				</div>
@@ -89,7 +89,7 @@ const Login: React.FC<RouteComponentProps> = (props) => {
 						className="form-control"
 						name="password"
 						type="password"
-						onChange={onFormInput}
+						onChange={onFormChange}
 						value={form.password}
 					/>
 				</div>

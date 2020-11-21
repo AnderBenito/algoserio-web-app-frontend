@@ -9,30 +9,69 @@ import {
 	InMemoryCache,
 	ApolloProvider,
 	createHttpLink,
+	ApolloLink,
+	from,
 } from "@apollo/client";
-import { setContext } from "@apollo/client/link/context";
 import { GlobalProvider } from "./context/GlobalProvider";
+import { getAccessToken, setAccessToken } from "./utils/accessToken";
+import jwtDecode from "jwt-decode";
 
 const httpLink = createHttpLink({
 	uri: "http://localhost:5000/graphql",
+	credentials: "include",
 });
 
-const authLink = setContext((_, { headers }) => {
-	// get the authentication token from local storage if it exists
-	const token = localStorage.getItem("accessToken");
-	// return the headers to the context so httpLink can read them
-	return {
-		headers: {
-			...headers,
-			authorization: token ? `Bearer ${token}` : "",
-		},
-	};
+const authMiddleware = new ApolloLink((operation, forward) => {
+	operation.setContext(({ headers = {} }) => {
+		const token = getAccessToken();
+		return {
+			headers: {
+				...headers,
+				authorization: token ? `Bearer ${token}` : "",
+			},
+		};
+	});
+	return forward(operation);
 });
+
+const refreshMiddleware = new ApolloLink((operation, forward) => {
+	const token = getAccessToken();
+
+	if (!token) return forward(operation);
+
+	const { exp } = jwtDecode(token) as any;
+	console.log(exp);
+
+	if (Date.now() >= exp * 1000) {
+		console.log("Token expired");
+
+		fetch("http://localhost:5000/auth/refresh_token", {
+			method: "POST",
+			credentials: "include",
+		}).then(async (res) => {
+			const data = await res.json();
+
+			if (data.accessToken) {
+				setAccessToken(data.accessToken);
+			}
+		});
+	}
+
+	return forward(operation);
+});
+// const authLink = setContext((_, { headers }) => {
+// 	const token = getAccessToken();
+// 	return {
+// 		headers: {
+// 			...headers,
+// 			authorization: token ? `Bearer ${token}` : "",
+// 		},
+// 	};
+// });
 
 const client = new ApolloClient({
-	link: authLink.concat(httpLink),
 	cache: new InMemoryCache(),
-	credentials: "include",
+	link: from([refreshMiddleware, authMiddleware, httpLink]),
 });
 
 ReactDOM.render(

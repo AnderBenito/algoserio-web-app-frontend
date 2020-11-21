@@ -1,4 +1,4 @@
-export default interface registerForm {
+export default interface RegisterForm {
 	name: string;
 	email: string;
 	username: string;

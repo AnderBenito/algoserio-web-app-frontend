@@ -1,21 +1,36 @@
+import { useApolloClient, useMutation } from "@apollo/client";
 import React, { useContext } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { GlobalContext } from "../../context/GlobalProvider";
+import { LOGOUT_USER } from "../../graphql/mutations/UserMutations";
+
 import "./index.css";
 const NavBar: React.FC = (props) => {
 	const [user, setUser] = useContext(GlobalContext);
 	const history = useHistory();
+	const client = useApolloClient();
 
-	const logOut = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+	const [logoutMutation, _] = useMutation(LOGOUT_USER);
+
+	const onlogOut = async (
+		event: React.MouseEvent<HTMLDivElement, MouseEvent>
+	) => {
 		event.preventDefault();
 		setUser({
-			accessToken: "",
+			loggedIn: false,
 		});
 		localStorage.removeItem("accessToken");
+		try {
+			await logoutMutation();
+			await client.resetStore();
+		} catch (e) {
+			console.log(e);
+		}
 		history.push("/");
 	};
+
 	const navComponent = () => {
-		if (user.accessToken) {
+		if (user.loggedIn) {
 			return (
 				<ul className="navbar-nav">
 					<li className="nav-item">
@@ -24,7 +39,7 @@ const NavBar: React.FC = (props) => {
 						</Link>
 					</li>
 					<li className="nav-item">
-						<div className="nav-link" onClick={logOut}>
+						<div className="nav-link" onClick={onlogOut}>
 							Cerrar Sesión
 						</div>
 					</li>

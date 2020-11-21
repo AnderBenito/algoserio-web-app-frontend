@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import React, { useState } from "react";
 import { CHANGE_USER_PASSWORD } from "../graphql/mutations/UserMutations";
 import { GET_CURRENT_USER } from "../graphql/queries/UserQueries";
+import { useForm } from "../utils/useForm";
 
 interface PasswordForm {
 	oldPassword: string;
@@ -9,38 +10,26 @@ interface PasswordForm {
 }
 
 const UserProfile: React.FC = () => {
-	const [passwordForm, setPasswordForm] = useState<PasswordForm>({
+	const [form, onFormChange, clearForm] = useForm<PasswordForm>({
 		oldPassword: "",
 		newPassword: "",
 	});
 	const [passwordConfirm, setPasswordConfirm] = useState<string>("");
-	const { loading, error, data } = useQuery(GET_CURRENT_USER);
+
+	const { loading, error, data } = useQuery(GET_CURRENT_USER, {
+		fetchPolicy: "network-only",
+	});
 	const [changePasswordMutation, changePasswordData] = useMutation(
 		CHANGE_USER_PASSWORD
 	);
-
-	const onFormInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setPasswordForm({
-			...passwordForm,
-			[event.target.name]: event.target.value,
-		});
-	};
-
-	const clearForm = () => {
-		setPasswordForm({
-			oldPassword: "",
-			newPassword: "",
-		});
-		setPasswordConfirm("");
-	};
 
 	const changePassword = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
 		if (
-			passwordConfirm !== passwordForm.newPassword ||
+			passwordConfirm !== form.newPassword ||
 			!passwordConfirm ||
-			!passwordForm.newPassword
+			!form.newPassword
 		) {
 			console.log("Dont match");
 			return;
@@ -49,14 +38,15 @@ const UserProfile: React.FC = () => {
 		try {
 			await changePasswordMutation({
 				variables: {
-					oldPassword: passwordForm.oldPassword,
-					newPassword: passwordForm.newPassword,
+					oldPassword: form.oldPassword,
+					newPassword: form.newPassword,
 				},
 			});
 		} catch (e) {
 			console.log(e);
+		} finally {
+			clearForm();
 		}
-		clearForm();
 	};
 
 	if (loading) {
@@ -78,8 +68,8 @@ const UserProfile: React.FC = () => {
 						<label>Antigua contraseña</label>
 						<input
 							name="oldPassword"
-							value={passwordForm.oldPassword}
-							onChange={onFormInput}
+							value={form.oldPassword}
+							onChange={onFormChange}
 							className="form-control"
 							type="password"
 						></input>
@@ -88,8 +78,8 @@ const UserProfile: React.FC = () => {
 						<label>Nueva contraseña</label>
 						<input
 							name="newPassword"
-							value={passwordForm.newPassword}
-							onChange={onFormInput}
+							value={form.newPassword}
+							onChange={onFormChange}
 							className="form-control"
 							type="password"
 						></input>

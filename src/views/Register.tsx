@@ -1,26 +1,21 @@
 import React, { useState } from "react";
-import registerForm from "../models/registerForm.model";
+import RegisterForm from "../models/registerForm.model";
 import { useMutation } from "@apollo/client";
 import { REGISTER_USER } from "../graphql/mutations/UserMutations";
 import { RouteComponentProps } from "react-router-dom";
 import LoadingButton from "../components/LoadingButton";
+import { useForm } from "../utils/useForm";
 
 const Register: React.FC<RouteComponentProps> = (props) => {
 	const [registerMutation, { loading }] = useMutation(REGISTER_USER);
-	const [form, setForm] = useState<registerForm>({
+	const [form, onFormChange, clearForm] = useForm<RegisterForm>({
 		name: "",
 		email: "",
 		username: "",
 		password: "",
 	});
-	const [confirmationPassword, setConfirmationPassword] = useState<string>("");
 
-	const onFormInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setForm({
-			...form,
-			[event.target.name]: event.target.value,
-		});
-	};
+	const [confirmationPassword, setConfirmationPassword] = useState<string>("");
 
 	const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
@@ -42,20 +37,12 @@ const Register: React.FC<RouteComponentProps> = (props) => {
 		} catch (e) {
 			console.log(e);
 			return;
+		} finally {
+			clearForm();
 		}
 
 		console.log("Register successful");
 		props.history.push("/auth/login");
-		clearForm();
-	};
-
-	const clearForm = () => {
-		setForm({
-			name: "",
-			username: "",
-			password: "",
-			email: "",
-		});
 	};
 
 	const isFormValid = () => {
@@ -76,7 +63,7 @@ const Register: React.FC<RouteComponentProps> = (props) => {
 						className="form-control"
 						name="name"
 						type="text"
-						onChange={onFormInput}
+						onChange={onFormChange}
 						value={form.name}
 					/>
 				</div>
@@ -86,7 +73,7 @@ const Register: React.FC<RouteComponentProps> = (props) => {
 						className="form-control"
 						name="email"
 						type="text"
-						onChange={onFormInput}
+						onChange={onFormChange}
 						value={form.email}
 					/>
 				</div>
@@ -96,7 +83,7 @@ const Register: React.FC<RouteComponentProps> = (props) => {
 						className="form-control"
 						name="username"
 						type="text"
-						onChange={onFormInput}
+						onChange={onFormChange}
 						value={form.username}
 					/>
 				</div>
@@ -106,7 +93,7 @@ const Register: React.FC<RouteComponentProps> = (props) => {
 						className="form-control"
 						name="password"
 						type="password"
-						onChange={onFormInput}
+						onChange={onFormChange}
 						value={form.password}
 					/>
 				</div>
