@@ -1,4 +1,4 @@
-import { UserData } from "./../models/UserModels";
+import { UserData, UserDataTotalPoints } from "./../models/UserModels";
 import { gql } from "@apollo/client";
 
 export interface GetUsersQuery {
@@ -7,6 +7,10 @@ export interface GetUsersQuery {
 
 export interface GetCurrentUserQuery {
 	getCurrentUser: UserData;
+}
+
+export interface GetTotalPointsPerUSer {
+	getTotalPointsPerUSer: UserDataTotalPoints[];
 }
 
 export const GET_USERS = gql`
@@ -42,6 +46,17 @@ export const GET_ALL_USER_INFO = gql`
 				reason
 				amount
 			}
+		}
+	}
+`;
+
+export const GET_TOTAL_POINTS_PER_USER = gql`
+	query GetTotalPointsPerUSer {
+		getTotalPointsPerUSer {
+			user {
+				name
+			}
+			totalPoints
 		}
 	}
 `;

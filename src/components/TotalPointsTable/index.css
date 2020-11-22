@@ -1,0 +1,8 @@
+.custom-table {
+	display: block;
+	position: relative;
+	max-height: 300px;
+	overflow: auto;
+	padding: 0px;
+	border-radius: 10px;
+}

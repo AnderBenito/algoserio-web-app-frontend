@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { AdminContext } from "../../context/AdminProvider";
 import { ADD_POINTS_TO_USERNAME } from "../../graphql/mutations/PointsMutations";
 import {
 	GetUsersQuery,
@@ -16,6 +17,7 @@ interface AddPointsForm {
 }
 
 const AddPoints: React.FC = () => {
+	const { setRefetchData } = useContext(AdminContext);
 	const [showModal, setShowModal] = useState<boolean>(false);
 	const { data, loading, error } = useQuery<GetUsersQuery>(GET_ALL_USER_INFO, {
 		fetchPolicy: "network-only",
@@ -37,6 +39,7 @@ const AddPoints: React.FC = () => {
 			console.log("Points cant be empty");
 			return;
 		}
+		setRefetchData(true);
 		try {
 			await addPointsMutation({
 				variables: {
@@ -51,6 +54,7 @@ const AddPoints: React.FC = () => {
 		} finally {
 			clearForm();
 			setShowModal(false);
+			setRefetchData(false);
 		}
 	};
 

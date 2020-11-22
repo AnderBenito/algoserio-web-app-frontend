@@ -6,3 +6,8 @@ export interface UserData {
 	email?: string;
 	points?: PointsData[];
 }
+
+export interface UserDataTotalPoints {
+	user: UserData;
+	totalPoints: number;
+}

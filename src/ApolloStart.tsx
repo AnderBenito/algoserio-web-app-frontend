@@ -22,7 +22,6 @@ const ApolloStart: React.FC<Props> = (props) => {
 	});
 
 	const authMiddleware = new ApolloLink((operation, forward) => {
-		console.log("authMiddleware");
 		operation.setContext(({ headers = {} }) => {
 			const token = getAccessToken();
 			return {

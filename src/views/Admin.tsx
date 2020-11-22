@@ -1,13 +1,13 @@
 import React from "react";
-import AddPoints from "../components/AddPoints";
-import PointsHistory from "../components/PointsHistory";
+
+import AdminComponent from "../components/Admin";
+import { AdminProvider } from "../context/AdminProvider";
 
 const Admin: React.FC = () => {
 	return (
-		<div>
-			<AddPoints />
-			<PointsHistory />
-		</div>
+		<AdminProvider>
+			<AdminComponent />
+		</AdminProvider>
 	);
 };
 

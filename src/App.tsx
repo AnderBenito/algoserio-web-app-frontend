@@ -2,7 +2,6 @@ import React, { useState, useContext, useEffect } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import { GlobalContext } from "./context/GlobalProvider";
-import { useApolloClient } from "@apollo/client";
 import { setAccessToken } from "./utils/accessToken";
 import fetchRequestToken from "./utils/fetchRequestToken";
 import LoadingSpinner from "./components/LoadingSpinner";
@@ -14,19 +13,15 @@ interface Props {}
 const App: React.FC<Props> = () => {
 	const [loading, setLoading] = useState<boolean>(true);
 	const { setUser } = useContext(GlobalContext);
-	const client = useApolloClient();
 
 	useEffect(
 		() => {
-			console.log("Main App Mounted");
 			setLoading(true);
-			console.log(client.link);
 
 			fetchRequestToken()
 				.then((data) => {
 					if (data.accessToken) {
 						setAccessToken(data.accessToken);
-						console.log(jwtDecode(data.accessToken));
 						const { isAdmin } = jwtDecode(data.accessToken) as any;
 						setUser({
 							isAdmin,

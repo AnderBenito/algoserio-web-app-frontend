@@ -8,44 +8,52 @@ import LoadingSpinner from "../LoadingSpinner";
 import "./index.css";
 import moment from "moment";
 
-const PointsHistory: React.FC = () => {
+interface Props {
+	refetching?: boolean;
+}
+
+const PointsHistory: React.FC<Props> = (props) => {
 	const {
 		data,
 		loading: dataLoading,
 		error: dataError,
+		refetch,
 	} = useQuery<GetPointsQuery>(GET_ALL_POINTS, {
 		fetchPolicy: "network-only",
 	});
 
-	useEffect(() => {}, [data]);
+	useEffect(() => {
+		refetch();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [props.refetching]);
 
 	const component = () => {
 		return (
-			<div className="container mt-2 ">
-				<b>Historial de TontoPoints:</b>
-				<table className="table table-striped ">
-					<thead className="thead-dark">
-						<tr>
-							<th scope="col">Dado en:</th>
-							<th scope="col">Nombre</th>
-							<th scope="col">Puntos</th>
-							<th scope="col">Razón</th>
-						</tr>
-					</thead>
-					<tbody>
-						{data?.getAllPoints.map((points, index) => {
-							const date = moment(points.createdAt!).format("MM-DD-YYYY");
-							return (
-								<tr key={index}>
-									<th scope="row">{date}</th>
-									<td>{points.user?.name}</td>
-									<td>{points.amount}</td>
-									<td>{points.reason}</td>
-								</tr>
-							);
-						})}
-					</tbody>
-				</table>
+			<div className="container mt-2 mb-2">
+				<b className="prueba">Historial de TontoPoints:</b>
+				<div className="custom-table-history">
+					<table className="table table-bordered table-striped mb-0">
+						<thead className="thead-dark custom-body">
+							<tr>
+								<th>Dado en:</th>
+								<th>Nombre</th>
+								<th>Puntos</th>
+							</tr>
+						</thead>
+						<tbody className=" custom-body">
+							{data?.getAllPoints.map((points, index) => {
+								const date = moment(points.createdAt!).format("MM-DD-YYYY");
+								return (
+									<tr onClick={(e) => console.log(points)} key={index}>
+										<th scope="row">{date}</th>
+										<td>{points.user?.name}</td>
+										<td>{points.amount}</td>
+									</tr>
+								);
+							})}
+						</tbody>
+					</table>
+				</div>
 			</div>
 		);
 	};

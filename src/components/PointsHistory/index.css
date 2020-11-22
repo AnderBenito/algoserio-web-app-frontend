@@ -1,0 +1,22 @@
+.custom-table-history {
+	display: block;
+	position: relative;
+	max-height: 500px;
+	overflow: auto;
+	padding: 0px;
+	border-radius: 10px;
+}
+
+tr {
+	transition: 0.3s;
+}
+
+tr:hover {
+	background-color: rgba(0, 0, 0, 0.2) !important;
+}
+
+::-webkit-scrollbar {
+	display: flow;
+	-webkit-appearance: none;
+	width: 0px;
+}
