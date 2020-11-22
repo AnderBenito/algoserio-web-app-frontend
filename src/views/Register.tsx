@@ -8,7 +8,7 @@ import { useForm } from "../utils/useForm";
 
 const Register: React.FC<RouteComponentProps> = (props) => {
 	const [registerMutation, { loading }] = useMutation(REGISTER_USER);
-	const [form, onFormChange, clearForm] = useForm<RegisterForm>({
+	const { form, onFormChange, clearForm } = useForm<RegisterForm>({
 		name: "",
 		email: "",
 		username: "",

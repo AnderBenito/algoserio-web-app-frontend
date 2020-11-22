@@ -7,32 +7,37 @@ import UserProfile from "../views/UserProfile";
 export const routes = [
 	{
 		path: "/",
+		exact: true,
 		component: Home,
 		title: "Home",
 		needsAuth: false,
 	},
 	{
 		path: "/auth/register",
+		exact: true,
 		component: Register,
 		title: "Register",
 		needsAuth: false,
 	},
 	{
 		path: "/auth/login",
+		exact: true,
 		component: Login,
 		title: "Login",
 		needsAuth: false,
 	},
 	{
 		path: "/user",
+		exact: true,
 		component: UserProfile,
 		title: "User Profile",
 		needsAuth: false,
 	},
 	{
 		path: "/admin",
+		exact: true,
 		component: Admin,
-		title: "User Profile",
+		title: "Admin",
 		needsAuth: true,
 	},
 ];

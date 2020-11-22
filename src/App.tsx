@@ -1,35 +1,49 @@
 import React, { useState, useContext, useEffect } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { routes } from "./routes";
+import { BrowserRouter as Router } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import { GlobalContext } from "./context/GlobalProvider";
 import { useApolloClient } from "@apollo/client";
 import { setAccessToken } from "./utils/accessToken";
 import fetchRequestToken from "./utils/fetchRequestToken";
 import LoadingSpinner from "./components/LoadingSpinner";
+import jwtDecode from "jwt-decode";
+import RoutesComponent from "./RoutesComponent";
 
 interface Props {}
 
 const App: React.FC<Props> = () => {
 	const [loading, setLoading] = useState<boolean>(true);
-	const [user, setUser] = useContext(GlobalContext);
+	const { setUser } = useContext(GlobalContext);
 	const client = useApolloClient();
 
 	useEffect(
 		() => {
+			console.log("Main App Mounted");
 			setLoading(true);
 			console.log(client.link);
 
-			fetchRequestToken().then((data) => {
-				if (data.accessToken) {
-					setAccessToken(data.accessToken);
+			fetchRequestToken()
+				.then((data) => {
+					if (data.accessToken) {
+						setAccessToken(data.accessToken);
+						console.log(jwtDecode(data.accessToken));
+						const { isAdmin } = jwtDecode(data.accessToken) as any;
+						setUser({
+							isAdmin,
+							loggedIn: true,
+						});
+					}
+				})
+				.catch((error) => {
+					console.log(error);
 					setUser({
-						...user,
-						loggedIn: true,
+						isAdmin: false,
+						loggedIn: false,
 					});
-				}
-				setLoading(false);
-			});
+				})
+				.finally(() => {
+					setLoading(false);
+				});
 		}, // eslint-disable-next-line
 		[]
 	);
@@ -42,18 +56,7 @@ const App: React.FC<Props> = () => {
 		<div className="App">
 			<Router>
 				<NavBar />
-				<Switch>
-					{routes.map((route, index) => {
-						return (
-							<Route
-								key={index}
-								path={route.path}
-								exact
-								component={route.component}
-							></Route>
-						);
-					})}
-				</Switch>
+				<RoutesComponent />
 			</Router>
 		</div>
 	);

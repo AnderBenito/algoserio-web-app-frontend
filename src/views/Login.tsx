@@ -7,14 +7,15 @@ import { LOGIN_USER } from "../graphql/mutations/UserMutations";
 import LoginForm from "../models/loginForm.model";
 import { setAccessToken } from "../utils/accessToken";
 import { useForm } from "../utils/useForm";
+import jwtDecode from "jwt-decode";
 
 const Login: React.FC<RouteComponentProps> = (props) => {
-	const [form, onFormChange, clearForm] = useForm<LoginForm>({
+	const { form, onFormChange, clearForm } = useForm<LoginForm>({
 		username: "",
 		password: "",
 	});
 
-	const [, setUser] = useContext(GlobalContext);
+	const { setUser } = useContext(GlobalContext);
 
 	const [loginMutation, { loading, error }] = useMutation(LOGIN_USER);
 
@@ -29,11 +30,14 @@ const Login: React.FC<RouteComponentProps> = (props) => {
 				},
 			});
 			console.log("Logging Successful");
+			const token = res.data.loginUser.accessToken;
+			setAccessToken(token);
+			const { isAdmin } = jwtDecode(token) as any;
 			setUser({
 				loggedIn: true,
-				user: res.data.loginUser.user,
+				isAdmin,
 			});
-			setAccessToken(res.data.loginUser.accessToken);
+
 			props.history.push("/");
 		} catch (e) {
 			console.log(e);

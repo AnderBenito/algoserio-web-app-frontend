@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { CHANGE_USER_PASSWORD } from "../graphql/mutations/UserMutations";
@@ -9,14 +9,15 @@ import { useForm } from "../utils/useForm";
 interface PasswordForm {
 	oldPassword: string;
 	newPassword: string;
+	confirmNewPassword: string;
 }
 
 const UserProfile: React.FC<RouteComponentProps> = (props) => {
-	const [form, onFormChange, clearForm] = useForm<PasswordForm>({
+	const { form, onFormChange, clearForm } = useForm<PasswordForm>({
 		oldPassword: "",
 		newPassword: "",
+		confirmNewPassword: "",
 	});
-	const [passwordConfirm, setPasswordConfirm] = useState<string>("");
 
 	const { loading, error, data } = useQuery(GET_CURRENT_USER, {
 		fetchPolicy: "network-only",
@@ -31,8 +32,8 @@ const UserProfile: React.FC<RouteComponentProps> = (props) => {
 		event.preventDefault();
 
 		if (
-			passwordConfirm !== form.newPassword ||
-			!passwordConfirm ||
+			form.confirmNewPassword !== form.newPassword ||
+			!form.confirmNewPassword ||
 			!form.newPassword
 		) {
 			console.log("Dont match");
@@ -54,6 +55,7 @@ const UserProfile: React.FC<RouteComponentProps> = (props) => {
 	};
 
 	if (loading) {
+		console.log("Loading");
 		return <LoadingSpinner />;
 	} else if (error) {
 		props.history.push("/auth/login");
@@ -90,8 +92,9 @@ const UserProfile: React.FC<RouteComponentProps> = (props) => {
 						<div className="form-group">
 							<label>Confirmar nueva contraseña</label>
 							<input
-								value={passwordConfirm}
-								onChange={(e) => setPasswordConfirm(e.target.value)}
+								name="confirmNewPassword"
+								value={form.confirmNewPassword}
+								onChange={onFormChange}
 								className="form-control"
 								type="password"
 							></input>

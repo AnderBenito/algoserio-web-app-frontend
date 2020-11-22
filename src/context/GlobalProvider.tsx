@@ -1,20 +1,23 @@
 import React, { createContext, useState } from "react";
+import UserContext from "../models/userContext.model";
 
-interface User {
-	loggedIn: boolean;
-	user: any;
+interface Props {}
+
+interface IContextProps {
+	user: UserContext;
+	setUser: React.Dispatch<React.SetStateAction<UserContext>>;
 }
 
-export const GlobalContext = createContext<any>({});
+export const GlobalContext = createContext<IContextProps>({} as IContextProps);
 
-export const GlobalProvider: React.FC = (props) => {
-	const [user, setUser] = useState<User>({
+export const GlobalProvider: React.FC<Props> = (props) => {
+	const [user, setUser] = useState<UserContext>({
 		loggedIn: false,
-		user: {},
+		isAdmin: false,
 	});
 
 	return (
-		<GlobalContext.Provider value={[user, setUser]}>
+		<GlobalContext.Provider value={{ user, setUser }}>
 			{props.children}
 		</GlobalContext.Provider>
 	);

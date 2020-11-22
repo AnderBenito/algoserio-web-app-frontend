@@ -6,7 +6,7 @@ import { LOGOUT_USER } from "../../graphql/mutations/UserMutations";
 
 import "./index.css";
 const NavBar: React.FC = (props) => {
-	const [user, setUser] = useContext(GlobalContext);
+	const { user, setUser } = useContext(GlobalContext);
 	const history = useHistory();
 	const client = useApolloClient();
 
@@ -18,7 +18,7 @@ const NavBar: React.FC = (props) => {
 		event.preventDefault();
 		setUser({
 			loggedIn: false,
-			user: {},
+			isAdmin: false,
 		});
 		localStorage.removeItem("accessToken");
 		try {
@@ -31,9 +31,8 @@ const NavBar: React.FC = (props) => {
 	};
 
 	const adminLink = () => {
-		console.log(user.user);
-		if (!user.user) return null;
-		if (user.user.isAdmin) {
+		if (!user) return null;
+		if (user.isAdmin) {
 			console.log("Is admin");
 			return (
 				<li className="nav-item">
