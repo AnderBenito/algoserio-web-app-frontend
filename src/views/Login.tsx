@@ -1,5 +1,5 @@
 import { useMutation } from "@apollo/client";
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import LoadingButton from "../components/LoadingButton";
 import { GlobalContext } from "../context/GlobalProvider";
@@ -9,25 +9,14 @@ import { setAccessToken } from "../utils/accessToken";
 import { useForm } from "../utils/useForm";
 
 const Login: React.FC<RouteComponentProps> = (props) => {
-	// const [form, setForm] = useState<LoginForm>({
-	// 	username: "",
-	// 	password: "",
-	// });
 	const [form, onFormChange, clearForm] = useForm<LoginForm>({
 		username: "",
 		password: "",
 	});
 
-	const [_, setUser] = useContext(GlobalContext);
+	const [, setUser] = useContext(GlobalContext);
 
 	const [loginMutation, { loading, error }] = useMutation(LOGIN_USER);
-
-	// const onFormInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-	// 	setForm({
-	// 		...form,
-	// 		[event.target.name]: event.target.value,
-	// 	});
-	// };
 
 	const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
@@ -39,25 +28,19 @@ const Login: React.FC<RouteComponentProps> = (props) => {
 					password: form.password,
 				},
 			});
+			console.log("Logging Successful");
+			setUser({
+				loggedIn: true,
+				user: res.data.loginUser.user,
+			});
+			setAccessToken(res.data.loginUser.accessToken);
+			props.history.push("/");
 		} catch (e) {
 			console.log(e);
 			return;
 		} finally {
 			clearForm();
 		}
-
-		console.log("Logging Successful");
-
-		//Save to local state
-		setUser({
-			loggedIn: true,
-		});
-		//Save to local storage
-		//localStorage.setItem("accessToken", res.data.loginUser.accessToken);
-		setAccessToken(res.data.loginUser.accessToken);
-
-		//Push to login
-		props.history.push("/");
 	};
 
 	const renderError = (errorMessage: string) => {

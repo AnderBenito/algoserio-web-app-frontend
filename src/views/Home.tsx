@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { GlobalContext } from "../context/GlobalProvider";
 
 const Home: React.FC = () => {
-	const [user, setUser] = useContext(GlobalContext);
+	const [user] = useContext(GlobalContext);
 	return (
 		<div className="container p-4">
 			<p className="text-justify lead">

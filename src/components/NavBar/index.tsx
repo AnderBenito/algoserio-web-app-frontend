@@ -10,7 +10,7 @@ const NavBar: React.FC = (props) => {
 	const history = useHistory();
 	const client = useApolloClient();
 
-	const [logoutMutation, _] = useMutation(LOGOUT_USER);
+	const [logoutMutation] = useMutation(LOGOUT_USER);
 
 	const onlogOut = async (
 		event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -18,6 +18,7 @@ const NavBar: React.FC = (props) => {
 		event.preventDefault();
 		setUser({
 			loggedIn: false,
+			user: {},
 		});
 		localStorage.removeItem("accessToken");
 		try {
@@ -29,6 +30,23 @@ const NavBar: React.FC = (props) => {
 		history.push("/");
 	};
 
+	const adminLink = () => {
+		console.log(user.user);
+		if (!user.user) return null;
+		if (user.user.isAdmin) {
+			console.log("Is admin");
+			return (
+				<li className="nav-item">
+					<Link className="nav-link" to="/admin">
+						Admin
+					</Link>
+				</li>
+			);
+		} else {
+			return null;
+		}
+	};
+
 	const navComponent = () => {
 		if (user.loggedIn) {
 			return (
@@ -38,6 +56,7 @@ const NavBar: React.FC = (props) => {
 							Mi Usuario
 						</Link>
 					</li>
+					{adminLink()}
 					<li className="nav-item">
 						<div className="nav-link" onClick={onlogOut}>
 							Cerrar Sesión

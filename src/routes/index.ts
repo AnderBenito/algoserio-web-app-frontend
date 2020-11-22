@@ -1,3 +1,4 @@
+import Admin from "../views/Admin";
 import Home from "../views/Home";
 import Login from "../views/Login";
 import Register from "../views/Register";
@@ -27,5 +28,11 @@ export const routes = [
 		component: UserProfile,
 		title: "User Profile",
 		needsAuth: false,
+	},
+	{
+		path: "/admin",
+		component: Admin,
+		title: "User Profile",
+		needsAuth: true,
 	},
 ];

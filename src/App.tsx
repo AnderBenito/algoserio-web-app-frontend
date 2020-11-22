@@ -5,34 +5,37 @@ import NavBar from "./components/NavBar";
 import { GlobalContext } from "./context/GlobalProvider";
 import { useApolloClient } from "@apollo/client";
 import { setAccessToken } from "./utils/accessToken";
+import fetchRequestToken from "./utils/fetchRequestToken";
+import LoadingSpinner from "./components/LoadingSpinner";
 
-const App: React.FC = () => {
+interface Props {}
+
+const App: React.FC<Props> = () => {
 	const [loading, setLoading] = useState<boolean>(true);
-	const [_, setUser] = useContext(GlobalContext);
+	const [user, setUser] = useContext(GlobalContext);
 	const client = useApolloClient();
 
-	useEffect(() => {
-		setLoading(true);
-		console.log(client.link);
-		fetch("http://localhost:5000/auth/refresh_token", {
-			method: "POST",
-			credentials: "include",
-		}).then(async (res) => {
-			const data = await res.json();
+	useEffect(
+		() => {
+			setLoading(true);
+			console.log(client.link);
 
-			if (data.accessToken) {
-				//localStorage.setItem("accessToken", data.accessToken);
-				setAccessToken(data.accessToken);
-				setUser({
-					loggedIn: true,
-				});
-			}
-			setLoading(false);
-		});
-	}, []);
+			fetchRequestToken().then((data) => {
+				if (data.accessToken) {
+					setAccessToken(data.accessToken);
+					setUser({
+						...user,
+						loggedIn: true,
+					});
+				}
+				setLoading(false);
+			});
+		}, // eslint-disable-next-line
+		[]
+	);
 
 	if (loading) {
-		return <div className="container">Loading...</div>;
+		return <LoadingSpinner />;
 	}
 
 	return (

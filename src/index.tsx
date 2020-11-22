@@ -15,6 +15,7 @@ import {
 import { GlobalProvider } from "./context/GlobalProvider";
 import { getAccessToken, setAccessToken } from "./utils/accessToken";
 import jwtDecode from "jwt-decode";
+import { TokenRefreshLink } from "apollo-link-token-refresh";
 
 const httpLink = createHttpLink({
 	uri: "http://localhost:5000/graphql",
@@ -34,31 +35,37 @@ const authMiddleware = new ApolloLink((operation, forward) => {
 	return forward(operation);
 });
 
-const refreshMiddleware = new ApolloLink((operation, forward) => {
-	const token = getAccessToken();
+// const refreshMiddleware = new ApolloLink((operation, forward) => {
+// 	const token = getAccessToken();
 
-	if (!token) return forward(operation);
+// 	if (!token) return forward(operation);
 
-	const { exp } = jwtDecode(token) as any;
-	console.log(exp);
+// 	const { exp } = jwtDecode(token) as any;
+// 	console.log(exp);
 
-	if (Date.now() >= exp * 1000) {
-		console.log("Token expired");
+// 	if (Date.now() >= exp * 1000) {
+// 		console.log("Token expired");
 
-		fetch("http://localhost:5000/auth/refresh_token", {
-			method: "POST",
-			credentials: "include",
-		}).then(async (res) => {
-			const data = await res.json();
+// 		fetchRequestToken().then((data) => {
+// 			if (data.accessToken) {
+// 				setAccessToken(data.accessToken);
+// 				console.log("IN");
+// 				operation.setContext(({ headers = {} }) => {
+// 					const token = getAccessToken();
+// 					return {
+// 						headers: {
+// 							...headers,
+// 							authorization: token ? `Bearer ${token}` : "",
+// 						},
+// 					};
+// 				});
+// 			}
+// 		});
+// 	}
 
-			if (data.accessToken) {
-				setAccessToken(data.accessToken);
-			}
-		});
-	}
+// 	return forward(operation);
+// });
 
-	return forward(operation);
-});
 // const authLink = setContext((_, { headers }) => {
 // 	const token = getAccessToken();
 // 	return {
@@ -69,9 +76,46 @@ const refreshMiddleware = new ApolloLink((operation, forward) => {
 // 	};
 // });
 
+const tokenRefreshMiddleware = new TokenRefreshLink({
+	accessTokenField: "accessToken",
+	isTokenValidOrUndefined: () => {
+		const token = getAccessToken();
+
+		if (!token) {
+			return true;
+		}
+
+		try {
+			const { exp } = jwtDecode(token) as any;
+			if (Date.now() >= exp * 1000) {
+				console.log("Token expired");
+				return false;
+			} else {
+				return true;
+			}
+		} catch (e) {
+			return false;
+		}
+	},
+	fetchAccessToken: () => {
+		return fetch("http://localhost:5000/auth/refresh_token", {
+			method: "POST",
+			credentials: "include",
+		});
+	},
+	handleFetch: (accessToken: string) => {
+		setAccessToken(accessToken);
+	},
+	handleError: (err: any) => {
+		// full control over handling token fetch Error
+		console.warn("Your refresh token is invalid. Try to relogin");
+		console.error(err);
+	},
+});
+
 const client = new ApolloClient({
 	cache: new InMemoryCache(),
-	link: from([refreshMiddleware, authMiddleware, httpLink]),
+	link: from([tokenRefreshMiddleware, authMiddleware, httpLink]),
 });
 
 ReactDOM.render(
