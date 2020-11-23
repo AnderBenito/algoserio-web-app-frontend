@@ -1,11 +1,11 @@
 import { useMutation } from "@apollo/client";
 import React, { useContext, useEffect, useState } from "react";
-import { AdminContext } from "../../context/AdminProvider";
-import { useGetAllUserInfoQuery } from "../../generated/graphql";
-import { ADD_POINTS_TO_USERNAME } from "../../graphql/mutations/PointsMutations";
-import { useForm } from "../../utils/useForm";
-import LoadingSpinner from "../Loading/LoadingSpinner";
-import ModalComponent from "../Modal";
+import { AdminContext } from "../../../context/AdminProvider";
+import { useGetAllUserInfoQuery } from "../../../generated/graphql";
+import { ADD_POINTS_TO_USERNAME } from "../../../graphql/mutations/PointsMutations";
+import { useForm } from "../../../utils/useForm";
+import LoadingSpinner from "../../Loading/LoadingSpinner";
+import ModalComponent from "../../Modal";
 import styles from "./index.module.css";
 
 interface AddPointsForm {
@@ -68,52 +68,52 @@ const AddPoints: React.FC = () => {
 	} else if (data) {
 		return (
 			<>
-				{showModal ? (
-					<ModalComponent
-						submitCallback={onFormSubmit}
-						closeCallback={() => setShowModal(false)}
+				<ModalComponent
+					submitCallback={onFormSubmit}
+					closeCallback={() => setShowModal(false)}
+					show={showModal}
+				>
+					Añadir puntos a: {username}
+					<form
+						onSubmit={(e) => {
+							e.preventDefault();
+						}}
 					>
-						Añadir puntos a: {username}
-						<form
-							onSubmit={(e) => {
-								e.preventDefault();
-							}}
+						<select
+							className="custom-select"
+							value={username}
+							onChange={(e) => setUsername(e.target.value)}
 						>
-							<select
-								className="custom-select"
-								value={username}
-								onChange={(e) => setUsername(e.target.value)}
-							>
-								{data.getAllUsers.map((user) => {
-									return (
-										<option key={user.id} value={user.username}>
-											{user.name}
-										</option>
-									);
-								})}
-							</select>
-							<div className="form-group">
-								<label>Razón</label>
-								<textarea
-									name="reason"
-									value={form.reason}
-									onChange={onFormChange}
-									className="form-control"
-								></textarea>
-							</div>
-							<div className="form-group">
-								<label>Cantidad de puntos</label>
-								<input
-									name="amount"
-									value={form.amount}
-									onChange={onFormChange}
-									className="form-control"
-									type="number"
-								></input>
-							</div>
-						</form>
-					</ModalComponent>
-				) : null}
+							{data.getAllUsers.map((user) => {
+								return (
+									<option key={user.id} value={user.username}>
+										{user.name}
+									</option>
+								);
+							})}
+						</select>
+						<div className="form-group">
+							<label>Razón</label>
+							<textarea
+								name="reason"
+								value={form.reason}
+								onChange={onFormChange}
+								className="form-control"
+							></textarea>
+						</div>
+						<div className="form-group">
+							<label>Cantidad de puntos</label>
+							<input
+								name="amount"
+								value={form.amount}
+								onChange={onFormChange}
+								className="form-control"
+								type="number"
+							></input>
+						</div>
+					</form>
+				</ModalComponent>
+
 				<div
 					className={styles.open_modal_icon}
 					onClick={(e) => setShowModal(true)}
@@ -134,9 +134,8 @@ const AddPoints: React.FC = () => {
 				</div>
 			</>
 		);
-	} else {
-		return null;
 	}
+	return null;
 };
 
 export default AddPoints;

@@ -16,12 +16,21 @@ export type Scalars = {
 export type Query = {
   __typename?: 'Query';
   getAllPoints: Array<Points>;
+  getPaginatedPoints: Array<Points>;
   getPointsById: Array<Points>;
   getPointsByUsername: Array<Points>;
   hello: Scalars['String'];
   getCurrentUser: User;
   getAllUsers: Array<User>;
+  getPaginatedUsers: Array<User>;
   getTotalPointsPerUSer: Array<TotalPointsPerUserResponse>;
+};
+
+
+export type QueryGetPaginatedPointsArgs = {
+  order?: Maybe<Scalars['String']>;
+  take?: Maybe<Scalars['Float']>;
+  skip?: Maybe<Scalars['Float']>;
 };
 
 
@@ -32,6 +41,13 @@ export type QueryGetPointsByIdArgs = {
 
 export type QueryGetPointsByUsernameArgs = {
   username: Scalars['String'];
+};
+
+
+export type QueryGetPaginatedUsersArgs = {
+  order?: Maybe<Scalars['String']>;
+  take?: Maybe<Scalars['Float']>;
+  skip?: Maybe<Scalars['Float']>;
 };
 
 export type Points = {
@@ -193,6 +209,25 @@ export type GetAllUsersQuery = (
       { __typename?: 'Points' }
       & Pick<Points, 'amount'>
     )>> }
+  )> }
+);
+
+export type GetPaginatedPointsQueryVariables = Exact<{
+  skip?: Maybe<Scalars['Float']>;
+  take?: Maybe<Scalars['Float']>;
+  order?: Maybe<Scalars['String']>;
+}>;
+
+
+export type GetPaginatedPointsQuery = (
+  { __typename?: 'Query' }
+  & { getPaginatedPoints: Array<(
+    { __typename?: 'Points' }
+    & Pick<Points, 'createdAt' | 'amount' | 'reason'>
+    & { user?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'name'>
+    )> }
   )> }
 );
 
@@ -455,6 +490,46 @@ export function useGetAllUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type GetAllUsersQueryHookResult = ReturnType<typeof useGetAllUsersQuery>;
 export type GetAllUsersLazyQueryHookResult = ReturnType<typeof useGetAllUsersLazyQuery>;
 export type GetAllUsersQueryResult = Apollo.QueryResult<GetAllUsersQuery, GetAllUsersQueryVariables>;
+export const GetPaginatedPointsDocument = gql`
+    query getPaginatedPoints($skip: Float, $take: Float, $order: String = "DESC") {
+  getPaginatedPoints(skip: $skip, take: $take, order: $order) {
+    createdAt
+    amount
+    reason
+    user {
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetPaginatedPointsQuery__
+ *
+ * To run a query within a React component, call `useGetPaginatedPointsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPaginatedPointsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPaginatedPointsQuery({
+ *   variables: {
+ *      skip: // value for 'skip'
+ *      take: // value for 'take'
+ *      order: // value for 'order'
+ *   },
+ * });
+ */
+export function useGetPaginatedPointsQuery(baseOptions?: Apollo.QueryHookOptions<GetPaginatedPointsQuery, GetPaginatedPointsQueryVariables>) {
+        return Apollo.useQuery<GetPaginatedPointsQuery, GetPaginatedPointsQueryVariables>(GetPaginatedPointsDocument, baseOptions);
+      }
+export function useGetPaginatedPointsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPaginatedPointsQuery, GetPaginatedPointsQueryVariables>) {
+          return Apollo.useLazyQuery<GetPaginatedPointsQuery, GetPaginatedPointsQueryVariables>(GetPaginatedPointsDocument, baseOptions);
+        }
+export type GetPaginatedPointsQueryHookResult = ReturnType<typeof useGetPaginatedPointsQuery>;
+export type GetPaginatedPointsLazyQueryHookResult = ReturnType<typeof useGetPaginatedPointsLazyQuery>;
+export type GetPaginatedPointsQueryResult = Apollo.QueryResult<GetPaginatedPointsQuery, GetPaginatedPointsQueryVariables>;
 export const GetTotalPointsPerUSerDocument = gql`
     query GetTotalPointsPerUSer {
   getTotalPointsPerUSer {

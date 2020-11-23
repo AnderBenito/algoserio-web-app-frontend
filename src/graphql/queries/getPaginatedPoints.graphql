@@ -1,0 +1,10 @@
+query getPaginatedPoints($skip: Float, $take: Float, $order: String = "DESC") {
+	getPaginatedPoints(skip: $skip, take: $take, order: $order) {
+		createdAt
+		amount
+		reason
+		user {
+			name
+		}
+	}
+}

@@ -4,11 +4,15 @@
 	max-height: 500px;
 	overflow: auto;
 	padding: 0px;
-	border-radius: 10px;
+	border-radius: 5px;
 }
 
 .custom_table tr {
 	transition: 0.3s;
+}
+
+.custom_table tbody tr {
+	cursor: pointer;
 }
 
 .custom_table tr:hover {

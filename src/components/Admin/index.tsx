@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AdminContext } from "../../context/AdminProvider";
-import AddPoints from "../AddPoints";
+import AddPoints from "./AddPoints";
 import PointsHistory from "./PointsHistory";
 import TotalPointsTable from "./TotalPointsTable";
 
