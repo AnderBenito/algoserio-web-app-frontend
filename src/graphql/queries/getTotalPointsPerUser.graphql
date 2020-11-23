@@ -1,0 +1,8 @@
+query GetTotalPointsPerUSer {
+	getTotalPointsPerUSer {
+		user {
+			name
+		}
+		totalPoints
+	}
+}

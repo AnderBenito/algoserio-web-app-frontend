@@ -1,0 +1,10 @@
+query GetAllPoints {
+	getAllPoints {
+		createdAt
+		amount
+		reason
+		user {
+			name
+		}
+	}
+}

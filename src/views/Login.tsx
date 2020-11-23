@@ -1,7 +1,7 @@
 import { useMutation } from "@apollo/client";
 import React, { useContext } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import LoadingButton from "../components/LoadingButton";
+import LoadingButton from "../components/Loading/LoadingButton";
 import { GlobalContext } from "../context/GlobalProvider";
 import { LOGIN_USER } from "../graphql/mutations/UserMutations";
 import LoginForm from "../models/loginForm.model";

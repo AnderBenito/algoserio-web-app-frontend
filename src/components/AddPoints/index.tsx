@@ -1,15 +1,12 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import React, { useContext, useEffect, useState } from "react";
 import { AdminContext } from "../../context/AdminProvider";
+import { useGetAllUserInfoQuery } from "../../generated/graphql";
 import { ADD_POINTS_TO_USERNAME } from "../../graphql/mutations/PointsMutations";
-import {
-	GetUsersQuery,
-	GET_ALL_USER_INFO,
-} from "../../graphql/queries/UserQueries";
 import { useForm } from "../../utils/useForm";
-import LoadingSpinner from "../LoadingSpinner";
+import LoadingSpinner from "../Loading/LoadingSpinner";
 import ModalComponent from "../Modal";
-import "./index.css";
+import styles from "./index.module.css";
 
 interface AddPointsForm {
 	reason: string;
@@ -19,10 +16,9 @@ interface AddPointsForm {
 const AddPoints: React.FC = () => {
 	const { setRefetchData } = useContext(AdminContext);
 	const [showModal, setShowModal] = useState<boolean>(false);
-	const { data, loading, error } = useQuery<GetUsersQuery>(GET_ALL_USER_INFO, {
+	const { data, loading, error } = useGetAllUserInfoQuery({
 		fetchPolicy: "network-only",
 	});
-
 	const [addPointsMutation] = useMutation(ADD_POINTS_TO_USERNAME);
 
 	const { form, onFormChange, clearForm } = useForm<AddPointsForm>({
@@ -88,7 +84,7 @@ const AddPoints: React.FC = () => {
 								value={username}
 								onChange={(e) => setUsername(e.target.value)}
 							>
-								{data.getAllUsers.map((user: any) => {
+								{data.getAllUsers.map((user) => {
 									return (
 										<option key={user.id} value={user.username}>
 											{user.name}
@@ -118,7 +114,10 @@ const AddPoints: React.FC = () => {
 						</form>
 					</ModalComponent>
 				) : null}
-				<div className="open-modal-icon" onClick={(e) => setShowModal(true)}>
+				<div
+					className={styles.open_modal_icon}
+					onClick={(e) => setShowModal(true)}
+				>
 					<svg
 						width="2.5em"
 						height="2.5em"
@@ -135,52 +134,6 @@ const AddPoints: React.FC = () => {
 				</div>
 			</>
 		);
-		// return (
-		// 	<div className="container mt-2">
-		// 		Añadir puntos a: {username}
-		// 		<form onSubmit={onFormSubmit}>
-		// 			<select
-		// 				className="custom-select"
-		// 				value={username}
-		// 				onChange={(e) => setUsername(e.target.value)}
-		// 			>
-		// 				{data.getAllUsers.map((user: any) => {
-		// 					return (
-		// 						<option key={user.id} value={user.username}>
-		// 							{user.name}
-		// 						</option>
-		// 					);
-		// 				})}
-		// 			</select>
-		// 			<div className="form-group">
-		// 				<label>Razón</label>
-		// 				<textarea
-		// 					name="reason"
-		// 					value={form.reason}
-		// 					onChange={onFormChange}
-		// 					className="form-control"
-		// 				></textarea>
-		// 			</div>
-		// 			<div className="form-group">
-		// 				<label>Cantidad de puntos</label>
-		// 				<input
-		// 					name="amount"
-		// 					value={form.amount}
-		// 					onChange={onFormChange}
-		// 					className="form-control"
-		// 					type="number"
-		// 				></input>
-		// 			</div>
-		// 			<div>
-		// 				<LoadingButton
-		// 					className="btn btn-primary w-100"
-		// 					loading={mutationLoading}
-		// 					text="Aceptar"
-		// 				/>
-		// 			</div>
-		// 		</form>
-		// 	</div>
-		// );
 	} else {
 		return null;
 	}

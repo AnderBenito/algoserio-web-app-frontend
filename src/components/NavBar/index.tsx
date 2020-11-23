@@ -4,7 +4,6 @@ import { Link, useHistory } from "react-router-dom";
 import { GlobalContext } from "../../context/GlobalProvider";
 import { LOGOUT_USER } from "../../graphql/mutations/UserMutations";
 
-import "./index.css";
 const NavBar: React.FC = (props) => {
 	const { user, setUser } = useContext(GlobalContext);
 	const history = useHistory();

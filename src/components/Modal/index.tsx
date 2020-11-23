@@ -1,5 +1,5 @@
 import React from "react";
-import "./index.css";
+import styles from "./index.module.css";
 
 interface Props {
 	closeCallback: (
@@ -11,8 +11,8 @@ interface Props {
 }
 const ModalComponent: React.FC<Props> = (props) => {
 	return (
-		<div className="custom-modal">
-			<div className="modal-window">
+		<div className={styles.custom_modal}>
+			<div className={styles.modal_window}>
 				<div className="modal-dialog">
 					<div className="modal-content">
 						<div className="modal-header">
@@ -46,7 +46,10 @@ const ModalComponent: React.FC<Props> = (props) => {
 					</div>
 				</div>
 			</div>
-			<div className="modal-background" onClick={props.closeCallback}></div>
+			<div
+				className={styles.modal_background}
+				onClick={props.closeCallback}
+			></div>
 		</div>
 	);
 };

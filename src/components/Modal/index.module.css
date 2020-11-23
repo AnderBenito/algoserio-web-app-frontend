@@ -1,4 +1,4 @@
-.custom-modal {
+.custom_modal {
 	position: fixed;
 	top: 0px;
 	left: 0px;
@@ -11,14 +11,14 @@
 	z-index: 49;
 }
 
-.modal-window {
+.modal_window {
 	position: relative;
 	z-index: 50;
 	width: 80%;
 	max-width: 500px;
 }
 
-.modal-background {
+.modal_background {
 	position: fixed;
 	width: 100vw;
 	height: 100vh;

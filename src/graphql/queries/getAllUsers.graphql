@@ -1,0 +1,10 @@
+query GetAllUsers {
+	getAllUsers {
+		id
+		name
+		username
+		points {
+			amount
+		}
+	}
+}

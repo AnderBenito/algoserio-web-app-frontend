@@ -4,7 +4,7 @@ import NavBar from "./components/NavBar";
 import { GlobalContext } from "./context/GlobalProvider";
 import { setAccessToken } from "./utils/accessToken";
 import fetchRequestToken from "./utils/fetchRequestToken";
-import LoadingSpinner from "./components/LoadingSpinner";
+import LoadingSpinner from "./components/Loading/LoadingSpinner";
 import jwtDecode from "jwt-decode";
 import RoutesComponent from "./RoutesComponent";
 

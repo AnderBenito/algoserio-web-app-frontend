@@ -3,7 +3,7 @@ import RegisterForm from "../models/registerForm.model";
 import { useMutation } from "@apollo/client";
 import { REGISTER_USER } from "../graphql/mutations/UserMutations";
 import { RouteComponentProps } from "react-router-dom";
-import LoadingButton from "../components/LoadingButton";
+import LoadingButton from "../components/Loading/LoadingButton";
 import { useForm } from "../utils/useForm";
 
 const Register: React.FC<RouteComponentProps> = (props) => {

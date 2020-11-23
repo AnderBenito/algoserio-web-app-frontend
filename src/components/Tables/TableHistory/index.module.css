@@ -1,4 +1,4 @@
-.custom-table-history {
+.custom_table {
 	display: block;
 	position: relative;
 	max-height: 500px;
@@ -7,11 +7,11 @@
 	border-radius: 10px;
 }
 
-tr {
+.custom_table tr {
 	transition: 0.3s;
 }
 
-tr:hover {
+.custom_table tr:hover {
 	background-color: rgba(0, 0, 0, 0.2) !important;
 }
 

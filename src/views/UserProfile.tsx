@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import React, { useEffect } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import LoadingSpinner from "../components/LoadingSpinner";
+import LoadingSpinner from "../components/Loading/LoadingSpinner";
 import { CHANGE_USER_PASSWORD } from "../graphql/mutations/UserMutations";
 import { GET_CURRENT_USER } from "../graphql/queries/UserQueries";
 import { useForm } from "../utils/useForm";

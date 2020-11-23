@@ -1,9 +1,9 @@
 import React from "react";
-import "./index.css";
+import styles from "./index.module.css";
 
 const LoadingSpinner: React.FC = () => {
 	return (
-		<div className="centered">
+		<div className={styles.centered}>
 			<div className="spinner-border" role="status">
 				<span className="sr-only">Loading...</span>
 			</div>
