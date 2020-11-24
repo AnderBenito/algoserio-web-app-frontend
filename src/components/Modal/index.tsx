@@ -2,10 +2,10 @@ import React from "react";
 import styles from "./index.module.css";
 
 interface Props {
-	closeCallback: (
+	closeCallback?: (
 		event: React.MouseEvent<HTMLButtonElement | HTMLDivElement, MouseEvent>
 	) => any;
-	submitCallback: (
+	submitCallback?: (
 		event: React.MouseEvent<HTMLButtonElement, MouseEvent>
 	) => any;
 	show: boolean;

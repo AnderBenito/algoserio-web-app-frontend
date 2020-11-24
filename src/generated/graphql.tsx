@@ -52,7 +52,7 @@ export type QueryGetPaginatedUsersArgs = {
 
 export type Points = {
   __typename?: 'Points';
-  id: Scalars['Float'];
+  id: Scalars['String'];
   createdAt: Scalars['DateTime'];
   amount: Scalars['Float'];
   reason: Scalars['String'];
@@ -81,6 +81,7 @@ export type TotalPointsPerUserResponse = {
 export type Mutation = {
   __typename?: 'Mutation';
   addPoints: Scalars['Boolean'];
+  deletePoints: Scalars['Boolean'];
   loginUser: LoginResponse;
   logOutUser: Scalars['Boolean'];
   registerUser: Scalars['Boolean'];
@@ -92,6 +93,11 @@ export type MutationAddPointsArgs = {
   reason: Scalars['String'];
   amount: Scalars['Float'];
   username: Scalars['String'];
+};
+
+
+export type MutationDeletePointsArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -130,6 +136,16 @@ export type ChangeUserPasswordMutationVariables = Exact<{
 export type ChangeUserPasswordMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'changeUserPassword'>
+);
+
+export type DeletePointsMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeletePointsMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deletePoints'>
 );
 
 export type UserLoginMutationVariables = Exact<{
@@ -174,7 +190,7 @@ export type GetAllPointsQuery = (
   { __typename?: 'Query' }
   & { getAllPoints: Array<(
     { __typename?: 'Points' }
-    & Pick<Points, 'createdAt' | 'amount' | 'reason'>
+    & Pick<Points, 'id' | 'createdAt' | 'amount' | 'reason'>
     & { user?: Maybe<(
       { __typename?: 'User' }
       & Pick<User, 'name'>
@@ -223,7 +239,7 @@ export type GetPaginatedPointsQuery = (
   { __typename?: 'Query' }
   & { getPaginatedPoints: Array<(
     { __typename?: 'Points' }
-    & Pick<Points, 'createdAt' | 'amount' | 'reason'>
+    & Pick<Points, 'createdAt' | 'id' | 'amount' | 'reason'>
     & { user?: Maybe<(
       { __typename?: 'User' }
       & Pick<User, 'name'>
@@ -278,6 +294,36 @@ export function useChangeUserPasswordMutation(baseOptions?: Apollo.MutationHookO
 export type ChangeUserPasswordMutationHookResult = ReturnType<typeof useChangeUserPasswordMutation>;
 export type ChangeUserPasswordMutationResult = Apollo.MutationResult<ChangeUserPasswordMutation>;
 export type ChangeUserPasswordMutationOptions = Apollo.BaseMutationOptions<ChangeUserPasswordMutation, ChangeUserPasswordMutationVariables>;
+export const DeletePointsDocument = gql`
+    mutation DeletePoints($id: String!) {
+  deletePoints(id: $id)
+}
+    `;
+export type DeletePointsMutationFn = Apollo.MutationFunction<DeletePointsMutation, DeletePointsMutationVariables>;
+
+/**
+ * __useDeletePointsMutation__
+ *
+ * To run a mutation, you first call `useDeletePointsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeletePointsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deletePointsMutation, { data, loading, error }] = useDeletePointsMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeletePointsMutation(baseOptions?: Apollo.MutationHookOptions<DeletePointsMutation, DeletePointsMutationVariables>) {
+        return Apollo.useMutation<DeletePointsMutation, DeletePointsMutationVariables>(DeletePointsDocument, baseOptions);
+      }
+export type DeletePointsMutationHookResult = ReturnType<typeof useDeletePointsMutation>;
+export type DeletePointsMutationResult = Apollo.MutationResult<DeletePointsMutation>;
+export type DeletePointsMutationOptions = Apollo.BaseMutationOptions<DeletePointsMutation, DeletePointsMutationVariables>;
 export const UserLoginDocument = gql`
     mutation UserLogin($username: String!, $password: String!) {
   loginUser(username: $username, password: $password) {
@@ -381,6 +427,7 @@ export type RegisterUserMutationOptions = Apollo.BaseMutationOptions<RegisterUse
 export const GetAllPointsDocument = gql`
     query GetAllPoints {
   getAllPoints {
+    id
     createdAt
     amount
     reason
@@ -494,6 +541,7 @@ export const GetPaginatedPointsDocument = gql`
     query getPaginatedPoints($skip: Float, $take: Float, $order: String = "DESC") {
   getPaginatedPoints(skip: $skip, take: $take, order: $order) {
     createdAt
+    id
     amount
     reason
     user {
