@@ -1,0 +1,3 @@
+mutation DeletePoints($id: String!) {
+	deletePoints(id: $id)
+}
