@@ -35,7 +35,7 @@ export const routes = [
 	},
 	{
 		path: "/admin",
-		exact: true,
+		exact: false,
 		component: Admin,
 		title: "Admin",
 		needsAuth: true,
