@@ -1,12 +1,16 @@
 import React, { useState, useContext, useEffect } from "react";
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import { GlobalContext } from "./context/GlobalProvider";
 import { setAccessToken } from "./utils/accessToken";
 import fetchRequestToken from "./utils/fetchRequestToken";
 import LoadingSpinner from "./components/Loading/LoadingSpinner";
 import jwtDecode from "jwt-decode";
-import RoutesComponent from "./RoutesComponent";
+import Home from "./views/Home";
+import UserProfile from "./views/UserProfile";
+import Admin from "./views/Admin";
+import Login from "./views/Login";
+import Register from "./views/Register";
 
 interface Props {}
 
@@ -51,7 +55,13 @@ const App: React.FC<Props> = () => {
 		<div className="App">
 			<Router>
 				<NavBar />
-				<RoutesComponent />
+				<Switch>
+					<Route path="/" exact component={Home} />
+					<Route path="/admin" exact component={Admin} />
+					<Route path="/user" exact component={UserProfile} />
+					<Route path="/auth/register" exact component={Register} />
+					<Route path="/auth/login" exact component={Login} />
+				</Switch>
 			</Router>
 		</div>
 	);
