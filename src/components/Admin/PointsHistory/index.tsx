@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import LoadingSpinner from "../../Loading/LoadingSpinner";
 import TableHistory from "../../Tables/TableHistory";
 import {
@@ -9,18 +9,21 @@ import Pagination from "../../Pagination";
 import ContextMenu from "../../ContextMenu";
 import MenuItem from "../../ContextMenu/MenuItem";
 import ModalComponent from "../../Modal";
+import { AdminContext } from "../../../context/AdminProvider";
 
 interface Props {
 	refetching?: boolean;
 }
 
 const PointsHistory: React.FC<Props> = (props) => {
+	const { setRefetchData } = useContext(AdminContext);
 	const [page, setPage] = useState({
 		page: 0,
 		total: 5,
 	});
 	const [showMenu, setShowMenu] = useState<boolean>(false);
-	const [showModal, setShowModal] = useState<boolean>(false);
+	const [showInfoModal, setShowInfoModal] = useState<boolean>(false);
+	const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 	const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 	const [pointItem, setPointItem] = useState<any>({});
 
@@ -37,7 +40,6 @@ const PointsHistory: React.FC<Props> = (props) => {
 	const [deletePoints] = useDeletePointsMutation();
 
 	useEffect(() => {
-		console.log("Historial mounted");
 		refetch();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [props.refetching]);
@@ -59,16 +61,18 @@ const PointsHistory: React.FC<Props> = (props) => {
 				/>
 				<Pagination page={page} setPage={setPage} />
 				<ContextMenu show={showMenu} setShow={setShowMenu} mousePos={mousePos}>
-					<MenuItem onItemClick={() => setShowModal(true)}>Info</MenuItem>
+					<MenuItem
+						onItemClick={() => {
+							setShowInfoModal(true);
+							setShowMenu(false);
+						}}
+					>
+						Info
+					</MenuItem>
 					<MenuItem>Editar</MenuItem>
 					<MenuItem
-						onItemClick={async () => {
-							await deletePoints({
-								variables: {
-									id: pointItem.id,
-								},
-							});
-							refetch();
+						onItemClick={() => {
+							setShowDeleteModal(true);
 							setShowMenu(false);
 						}}
 					>
@@ -76,17 +80,24 @@ const PointsHistory: React.FC<Props> = (props) => {
 					</MenuItem>
 				</ContextMenu>
 				<ModalComponent
+					title="Información de los puntos"
 					submitCallback={() => {
-						setShowModal(false);
-						setShowMenu(false);
+						setShowInfoModal(false);
 					}}
 					closeCallback={() => {
-						setShowModal(false);
-						setShowMenu(false);
+						setShowInfoModal(false);
 					}}
-					show={showModal}
+					show={showInfoModal}
 				>
 					<div>
+						<div>
+							<b>A: </b>
+							{pointItem.user && pointItem.user.name}
+						</div>
+						<div>
+							<b>Fecha: </b>
+							{pointItem.createdAt}
+						</div>
 						<div>
 							<b>Razón: </b>
 							{pointItem.reason}
@@ -96,6 +107,25 @@ const PointsHistory: React.FC<Props> = (props) => {
 							{pointItem.amount}
 						</div>
 					</div>
+				</ModalComponent>
+				<ModalComponent
+					show={showDeleteModal}
+					title="Borrar puntos"
+					submitCallback={async () => {
+						setShowDeleteModal(false);
+						await deletePoints({
+							variables: {
+								id: pointItem.id,
+							},
+						});
+						refetch();
+						setRefetchData(true);
+					}}
+					closeCallback={() => {
+						setShowDeleteModal(false);
+					}}
+				>
+					<div>¿Seguro que quieres borrar los puntos?</div>
 				</ModalComponent>
 			</div>
 		);

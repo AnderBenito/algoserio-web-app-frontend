@@ -72,6 +72,7 @@ const AddPoints: React.FC = () => {
 					submitCallback={onFormSubmit}
 					closeCallback={() => setShowModal(false)}
 					show={showModal}
+					title="Añadir puntos"
 				>
 					Añadir puntos a: {username}
 					<form

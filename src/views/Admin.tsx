@@ -1,5 +1,4 @@
 import React from "react";
-
 import AdminComponent from "../components/Admin";
 import { AdminProvider } from "../context/AdminProvider";
 

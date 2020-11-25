@@ -2,5 +2,11 @@
 	position: fixed;
 	bottom: 50px;
 	right: 20px;
-	z-index: 50;
+	z-index: 20;
+	cursor: pointer;
+	transition: 0.2s;
+}
+
+.open_modal_icon:hover {
+	transform: scale(1.2);
 }

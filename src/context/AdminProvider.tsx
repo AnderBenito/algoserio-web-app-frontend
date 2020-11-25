@@ -11,6 +11,7 @@ export const AdminContext = createContext<IContextProps>({} as any);
 
 export const AdminProvider: React.FC<Props> = (props) => {
 	const [refetchData, setRefetchData] = useState<boolean>(false);
+
 	return (
 		<AdminContext.Provider value={{ refetchData, setRefetchData }}>
 			{props.children}
