@@ -3,7 +3,7 @@ import { Route } from "react-router-dom";
 import AdminNavBar from "../../components/Admin/AdminNavBar";
 import { AdminProvider } from "../../context/AdminProvider";
 
-const AdminComponent = lazy(() => import("../../components/Admin"));
+const AdminHome = lazy(() => import("./AdminHome"));
 const Analytics = lazy(() => import("./Analytics"));
 
 const Admin: React.FC = () => {
@@ -11,7 +11,7 @@ const Admin: React.FC = () => {
 		<AdminProvider>
 			<AdminNavBar></AdminNavBar>
 			<>
-				<Route path="/admin" exact component={AdminComponent} />
+				<Route path="/admin" exact component={AdminHome} />
 				<Route path="/admin/analytics" exact component={Analytics} />
 			</>
 		</AdminProvider>
