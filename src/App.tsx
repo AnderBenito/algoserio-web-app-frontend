@@ -6,7 +6,7 @@ import { setAccessToken } from "./utils/accessToken";
 import fetchRequestToken from "./utils/fetchRequestToken";
 import LoadingSpinner from "./components/Loading/LoadingSpinner";
 import jwtDecode from "jwt-decode";
-import RoutesComponent from "./RoutesComponent";
+import RoutesComponent from "./components/RoutesComponent";
 
 interface Props {}
 

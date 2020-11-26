@@ -1,8 +1,9 @@
-import { useMutation } from "@apollo/client";
 import React, { useContext, useEffect, useState } from "react";
 import { AdminContext } from "../../../context/AdminProvider";
-import { useGetAllUserInfoQuery } from "../../../generated/graphql";
-import { ADD_POINTS_TO_USERNAME } from "../../../graphql/mutations/PointsMutations";
+import {
+	useAddPointsMutation,
+	useGetAllUserInfoQuery,
+} from "../../../generated/graphql";
 import { useForm } from "../../../utils/useForm";
 import LoadingSpinner from "../../Loading/LoadingSpinner";
 import ModalComponent from "../../Modal";
@@ -19,7 +20,7 @@ const AddPoints: React.FC = () => {
 	const { data, loading, error } = useGetAllUserInfoQuery({
 		fetchPolicy: "network-only",
 	});
-	const [addPointsMutation] = useMutation(ADD_POINTS_TO_USERNAME);
+	const [addPointsMutation] = useAddPointsMutation();
 
 	const { form, onFormChange, clearForm } = useForm<AddPointsForm>({
 		reason: "",

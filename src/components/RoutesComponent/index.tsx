@@ -1,13 +1,13 @@
 import React, { lazy, Suspense, useContext } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
-import LoadingSpinner from "./components/Loading/LoadingSpinner";
-import { GlobalContext } from "./context/GlobalProvider";
+import LoadingSpinner from "../Loading/LoadingSpinner";
+import { GlobalContext } from "../../context/GlobalProvider";
 
-const Admin = lazy(() => import("./views/Admin"));
-const Home = lazy(() => import("./views/Home"));
-const Login = lazy(() => import("./views/Login"));
-const Register = lazy(() => import("./views/Register"));
-const UserProfile = lazy(() => import("./views/UserProfile"));
+const Admin = lazy(() => import("../../views/Admin"));
+const Home = lazy(() => import("../../views/Home"));
+const Login = lazy(() => import("../../views/Login"));
+const Register = lazy(() => import("../../views/Register"));
+const UserProfile = lazy(() => import("../../views/User"));
 
 // const RouteComponent: React.FC<any> = (route: typeof routes[0]) => {
 // 	const { user } = useContext(GlobalContext);
@@ -30,7 +30,7 @@ const PrivateRoute: React.FC<any> = ({ ...props }) => {
 
 const RoutesComponent: React.FC = () => {
 	return (
-		<Suspense fallback={LoadingSpinner}>
+		<Suspense fallback={<LoadingSpinner></LoadingSpinner>}>
 			<Switch>
 				<Route exact path="/" component={Home} />
 				<Route exact path="/auth/login" component={Login} />

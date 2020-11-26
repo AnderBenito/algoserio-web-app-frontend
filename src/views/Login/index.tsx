@@ -1,13 +1,12 @@
-import { useMutation } from "@apollo/client";
 import React, { useContext } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import LoadingButton from "../components/Loading/LoadingButton";
-import { GlobalContext } from "../context/GlobalProvider";
-import { LOGIN_USER } from "../graphql/mutations/UserMutations";
-import LoginForm from "../models/loginForm.model";
-import { setAccessToken } from "../utils/accessToken";
-import { useForm } from "../utils/useForm";
+import LoadingButton from "../../components/Loading/LoadingButton";
+import { GlobalContext } from "../../context/GlobalProvider";
+import LoginForm from "../../models/loginForm.model";
+import { setAccessToken } from "../../utils/accessToken";
+import { useForm } from "../../utils/useForm";
 import jwtDecode from "jwt-decode";
+import { useUserLoginMutation } from "../../generated/graphql";
 
 const Login: React.FC<RouteComponentProps> = (props) => {
 	const { form, onFormChange, clearForm } = useForm<LoginForm>({
@@ -17,7 +16,7 @@ const Login: React.FC<RouteComponentProps> = (props) => {
 
 	const { setUser } = useContext(GlobalContext);
 
-	const [loginMutation, { loading, error }] = useMutation(LOGIN_USER);
+	const [loginMutation, { loading, error }] = useUserLoginMutation();
 
 	const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
@@ -30,7 +29,7 @@ const Login: React.FC<RouteComponentProps> = (props) => {
 				},
 			});
 			console.log("Logging Successful");
-			const token = res.data.loginUser.accessToken;
+			const token = res.data!.loginUser.accessToken;
 			setAccessToken(token);
 			const { isAdmin } = jwtDecode(token) as any;
 			setUser({

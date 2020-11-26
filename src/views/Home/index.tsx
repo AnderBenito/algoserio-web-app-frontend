@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { GlobalContext } from "../context/GlobalProvider";
+import { GlobalContext } from "../../context/GlobalProvider";
 
 const Home: React.FC = () => {
 	const { user } = useContext(GlobalContext);

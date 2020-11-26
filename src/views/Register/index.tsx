@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-import RegisterForm from "../models/registerForm.model";
-import { useMutation } from "@apollo/client";
-import { REGISTER_USER } from "../graphql/mutations/UserMutations";
+import RegisterForm from "../../models/registerForm.model";
 import { RouteComponentProps } from "react-router-dom";
-import LoadingButton from "../components/Loading/LoadingButton";
-import { useForm } from "../utils/useForm";
+import LoadingButton from "../../components/Loading/LoadingButton";
+import { useForm } from "../../utils/useForm";
+import { useRegisterUserMutation } from "../../generated/graphql";
 
 const Register: React.FC<RouteComponentProps> = (props) => {
-	const [registerMutation, { loading }] = useMutation(REGISTER_USER);
+	const [registerMutation, { loading }] = useRegisterUserMutation();
 	const { form, onFormChange, clearForm } = useForm<RegisterForm>({
 		name: "",
 		email: "",

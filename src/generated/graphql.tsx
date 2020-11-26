@@ -82,6 +82,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   addPoints: Scalars['Boolean'];
   deletePoints: Scalars['Boolean'];
+  updatePoints: Points;
   loginUser: LoginResponse;
   logOutUser: Scalars['Boolean'];
   registerUser: Scalars['Boolean'];
@@ -97,6 +98,13 @@ export type MutationAddPointsArgs = {
 
 
 export type MutationDeletePointsArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationUpdatePointsArgs = {
+  reason?: Maybe<Scalars['String']>;
+  amount?: Maybe<Scalars['Float']>;
   id: Scalars['String'];
 };
 
@@ -126,6 +134,18 @@ export type LoginResponse = {
   accessToken: Scalars['String'];
   user: User;
 };
+
+export type AddPointsMutationVariables = Exact<{
+  username: Scalars['String'];
+  reason: Scalars['String'];
+  amount: Scalars['Float'];
+}>;
+
+
+export type AddPointsMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'addPoints'>
+);
 
 export type ChangeUserPasswordMutationVariables = Exact<{
   oldPassword: Scalars['String'];
@@ -228,6 +248,17 @@ export type GetAllUsersQuery = (
   )> }
 );
 
+export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCurrentUserQuery = (
+  { __typename?: 'Query' }
+  & { getCurrentUser: (
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'name' | 'username'>
+  ) }
+);
+
 export type GetPaginatedPointsQueryVariables = Exact<{
   skip?: Maybe<Scalars['Float']>;
   take?: Maybe<Scalars['Float']>;
@@ -263,6 +294,38 @@ export type GetTotalPointsPerUSerQuery = (
 );
 
 
+export const AddPointsDocument = gql`
+    mutation AddPoints($username: String!, $reason: String!, $amount: Float!) {
+  addPoints(username: $username, reason: $reason, amount: $amount)
+}
+    `;
+export type AddPointsMutationFn = Apollo.MutationFunction<AddPointsMutation, AddPointsMutationVariables>;
+
+/**
+ * __useAddPointsMutation__
+ *
+ * To run a mutation, you first call `useAddPointsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddPointsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addPointsMutation, { data, loading, error }] = useAddPointsMutation({
+ *   variables: {
+ *      username: // value for 'username'
+ *      reason: // value for 'reason'
+ *      amount: // value for 'amount'
+ *   },
+ * });
+ */
+export function useAddPointsMutation(baseOptions?: Apollo.MutationHookOptions<AddPointsMutation, AddPointsMutationVariables>) {
+        return Apollo.useMutation<AddPointsMutation, AddPointsMutationVariables>(AddPointsDocument, baseOptions);
+      }
+export type AddPointsMutationHookResult = ReturnType<typeof useAddPointsMutation>;
+export type AddPointsMutationResult = Apollo.MutationResult<AddPointsMutation>;
+export type AddPointsMutationOptions = Apollo.BaseMutationOptions<AddPointsMutation, AddPointsMutationVariables>;
 export const ChangeUserPasswordDocument = gql`
     mutation ChangeUserPassword($oldPassword: String!, $newPassword: String!) {
   changeUserPassword(oldPassword: $oldPassword, newPassword: $newPassword)
@@ -537,6 +600,40 @@ export function useGetAllUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type GetAllUsersQueryHookResult = ReturnType<typeof useGetAllUsersQuery>;
 export type GetAllUsersLazyQueryHookResult = ReturnType<typeof useGetAllUsersLazyQuery>;
 export type GetAllUsersQueryResult = Apollo.QueryResult<GetAllUsersQuery, GetAllUsersQueryVariables>;
+export const GetCurrentUserDocument = gql`
+    query GetCurrentUser {
+  getCurrentUser {
+    id
+    name
+    username
+  }
+}
+    `;
+
+/**
+ * __useGetCurrentUserQuery__
+ *
+ * To run a query within a React component, call `useGetCurrentUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCurrentUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCurrentUserQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetCurrentUserQuery(baseOptions?: Apollo.QueryHookOptions<GetCurrentUserQuery, GetCurrentUserQueryVariables>) {
+        return Apollo.useQuery<GetCurrentUserQuery, GetCurrentUserQueryVariables>(GetCurrentUserDocument, baseOptions);
+      }
+export function useGetCurrentUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCurrentUserQuery, GetCurrentUserQueryVariables>) {
+          return Apollo.useLazyQuery<GetCurrentUserQuery, GetCurrentUserQueryVariables>(GetCurrentUserDocument, baseOptions);
+        }
+export type GetCurrentUserQueryHookResult = ReturnType<typeof useGetCurrentUserQuery>;
+export type GetCurrentUserLazyQueryHookResult = ReturnType<typeof useGetCurrentUserLazyQuery>;
+export type GetCurrentUserQueryResult = Apollo.QueryResult<GetCurrentUserQuery, GetCurrentUserQueryVariables>;
 export const GetPaginatedPointsDocument = gql`
     query getPaginatedPoints($skip: Float, $take: Float, $order: String = "DESC") {
   getPaginatedPoints(skip: $skip, take: $take, order: $order) {

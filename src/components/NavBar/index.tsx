@@ -1,15 +1,15 @@
-import { useApolloClient, useMutation } from "@apollo/client";
+import { useApolloClient } from "@apollo/client";
 import React, { useContext } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { GlobalContext } from "../../context/GlobalProvider";
-import { LOGOUT_USER } from "../../graphql/mutations/UserMutations";
+import { useUserLogoutMutation } from "../../generated/graphql";
 
 const NavBar: React.FC = (props) => {
 	const { user, setUser } = useContext(GlobalContext);
 	const history = useHistory();
 	const client = useApolloClient();
 
-	const [logoutMutation] = useMutation(LOGOUT_USER);
+	const [logoutMutation] = useUserLogoutMutation();
 
 	const onlogOut = async (
 		event: React.MouseEvent<HTMLDivElement, MouseEvent>

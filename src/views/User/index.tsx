@@ -1,10 +1,11 @@
-import { useMutation, useQuery } from "@apollo/client";
 import React, { useEffect } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import LoadingSpinner from "../components/Loading/LoadingSpinner";
-import { CHANGE_USER_PASSWORD } from "../graphql/mutations/UserMutations";
-import { GET_CURRENT_USER } from "../graphql/queries/UserQueries";
-import { useForm } from "../utils/useForm";
+import LoadingSpinner from "../../components/Loading/LoadingSpinner";
+import {
+	useChangeUserPasswordMutation,
+	useGetCurrentUserQuery,
+} from "../../generated/graphql";
+import { useForm } from "../../utils/useForm";
 
 interface PasswordForm {
 	oldPassword: string;
@@ -19,10 +20,10 @@ const UserProfile: React.FC<RouteComponentProps> = (props) => {
 		confirmNewPassword: "",
 	});
 
-	const { loading, error, data } = useQuery(GET_CURRENT_USER, {
+	const { loading, error, data } = useGetCurrentUserQuery({
 		fetchPolicy: "network-only",
 	});
-	const [changePasswordMutation] = useMutation(CHANGE_USER_PASSWORD);
+	const [changePasswordMutation] = useChangeUserPasswordMutation();
 
 	useEffect(() => {
 		console.log("User mounted");
