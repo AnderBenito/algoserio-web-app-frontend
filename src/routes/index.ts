@@ -1,8 +1,16 @@
-import Admin from "../views/Admin";
-import Home from "../views/Home";
-import Login from "../views/Login";
-import Register from "../views/Register";
-import UserProfile from "../views/UserProfile";
+// import Admin from "../views/Admin";
+// import Home from "../views/Home";
+// import Login from "../views/Login";
+// import Register from "../views/Register";
+// import UserProfile from "../views/UserProfile";
+
+import { lazy } from "react";
+
+const Admin = lazy(() => import("../views/Admin"));
+const Home = lazy(() => import("../views/Home"));
+const Login = lazy(() => import("../views/Login"));
+const Register = lazy(() => import("../views/Register"));
+const UserProfile = lazy(() => import("../views/UserProfile"));
 
 export const routes = [
 	{
