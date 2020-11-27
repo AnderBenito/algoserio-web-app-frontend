@@ -1,0 +1,7 @@
+query GetPointsById($id: String!) {
+	getPointsById(id: $id) {
+		createdAt
+		amount
+		reason
+	}
+}

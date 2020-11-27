@@ -17,7 +17,8 @@ export type Query = {
   __typename?: 'Query';
   getAllPoints: Array<Points>;
   getPaginatedPoints: Array<Points>;
-  getPointsById: Array<Points>;
+  getPointsById: Points;
+  getPointsByUserId: Array<Points>;
   getPointsByUsername: Array<Points>;
   hello: Scalars['String'];
   getCurrentUser: User;
@@ -35,7 +36,12 @@ export type QueryGetPaginatedPointsArgs = {
 
 
 export type QueryGetPointsByIdArgs = {
-  id: Scalars['Float'];
+  id: Scalars['String'];
+};
+
+
+export type QueryGetPointsByUserIdArgs = {
+  userId: Scalars['String'];
 };
 
 
@@ -203,6 +209,21 @@ export type RegisterUserMutation = (
   & Pick<Mutation, 'registerUser'>
 );
 
+export type UpdatePointsMutationVariables = Exact<{
+  id: Scalars['String'];
+  reason?: Maybe<Scalars['String']>;
+  amount?: Maybe<Scalars['Float']>;
+}>;
+
+
+export type UpdatePointsMutation = (
+  { __typename?: 'Mutation' }
+  & { updatePoints: (
+    { __typename?: 'Points' }
+    & Pick<Points, 'createdAt' | 'amount' | 'reason'>
+  ) }
+);
+
 export type GetAllPointsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -276,6 +297,19 @@ export type GetPaginatedPointsQuery = (
       & Pick<User, 'name'>
     )> }
   )> }
+);
+
+export type GetPointsByIdQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type GetPointsByIdQuery = (
+  { __typename?: 'Query' }
+  & { getPointsById: (
+    { __typename?: 'Points' }
+    & Pick<Points, 'createdAt' | 'amount' | 'reason'>
+  ) }
 );
 
 export type GetTotalPointsPerUSerQueryVariables = Exact<{ [key: string]: never; }>;
@@ -487,6 +521,42 @@ export function useRegisterUserMutation(baseOptions?: Apollo.MutationHookOptions
 export type RegisterUserMutationHookResult = ReturnType<typeof useRegisterUserMutation>;
 export type RegisterUserMutationResult = Apollo.MutationResult<RegisterUserMutation>;
 export type RegisterUserMutationOptions = Apollo.BaseMutationOptions<RegisterUserMutation, RegisterUserMutationVariables>;
+export const UpdatePointsDocument = gql`
+    mutation UpdatePoints($id: String!, $reason: String, $amount: Float) {
+  updatePoints(id: $id, reason: $reason, amount: $amount) {
+    createdAt
+    amount
+    reason
+  }
+}
+    `;
+export type UpdatePointsMutationFn = Apollo.MutationFunction<UpdatePointsMutation, UpdatePointsMutationVariables>;
+
+/**
+ * __useUpdatePointsMutation__
+ *
+ * To run a mutation, you first call `useUpdatePointsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePointsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePointsMutation, { data, loading, error }] = useUpdatePointsMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      reason: // value for 'reason'
+ *      amount: // value for 'amount'
+ *   },
+ * });
+ */
+export function useUpdatePointsMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePointsMutation, UpdatePointsMutationVariables>) {
+        return Apollo.useMutation<UpdatePointsMutation, UpdatePointsMutationVariables>(UpdatePointsDocument, baseOptions);
+      }
+export type UpdatePointsMutationHookResult = ReturnType<typeof useUpdatePointsMutation>;
+export type UpdatePointsMutationResult = Apollo.MutationResult<UpdatePointsMutation>;
+export type UpdatePointsMutationOptions = Apollo.BaseMutationOptions<UpdatePointsMutation, UpdatePointsMutationVariables>;
 export const GetAllPointsDocument = gql`
     query GetAllPoints {
   getAllPoints {
@@ -675,6 +745,41 @@ export function useGetPaginatedPointsLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type GetPaginatedPointsQueryHookResult = ReturnType<typeof useGetPaginatedPointsQuery>;
 export type GetPaginatedPointsLazyQueryHookResult = ReturnType<typeof useGetPaginatedPointsLazyQuery>;
 export type GetPaginatedPointsQueryResult = Apollo.QueryResult<GetPaginatedPointsQuery, GetPaginatedPointsQueryVariables>;
+export const GetPointsByIdDocument = gql`
+    query GetPointsById($id: String!) {
+  getPointsById(id: $id) {
+    createdAt
+    amount
+    reason
+  }
+}
+    `;
+
+/**
+ * __useGetPointsByIdQuery__
+ *
+ * To run a query within a React component, call `useGetPointsByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPointsByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPointsByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetPointsByIdQuery(baseOptions: Apollo.QueryHookOptions<GetPointsByIdQuery, GetPointsByIdQueryVariables>) {
+        return Apollo.useQuery<GetPointsByIdQuery, GetPointsByIdQueryVariables>(GetPointsByIdDocument, baseOptions);
+      }
+export function useGetPointsByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPointsByIdQuery, GetPointsByIdQueryVariables>) {
+          return Apollo.useLazyQuery<GetPointsByIdQuery, GetPointsByIdQueryVariables>(GetPointsByIdDocument, baseOptions);
+        }
+export type GetPointsByIdQueryHookResult = ReturnType<typeof useGetPointsByIdQuery>;
+export type GetPointsByIdLazyQueryHookResult = ReturnType<typeof useGetPointsByIdLazyQuery>;
+export type GetPointsByIdQueryResult = Apollo.QueryResult<GetPointsByIdQuery, GetPointsByIdQueryVariables>;
 export const GetTotalPointsPerUSerDocument = gql`
     query GetTotalPointsPerUSer {
   getTotalPointsPerUSer {

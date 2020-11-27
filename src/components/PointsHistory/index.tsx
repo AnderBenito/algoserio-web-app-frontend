@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useDeletePointsMutation } from "../../generated/graphql";
 import ContextMenu from "../ContextMenu";
 import MenuItem from "../ContextMenu/MenuItem";
+import EditPointsForm from "../EditPointsForm";
 import ModalComponent from "../Modal";
 import Pagination from "../Pagination";
 import TableHistory from "../Tables/TableHistory";
@@ -22,9 +23,11 @@ const PointsHistory: React.FC<Props> = ({
 	const [showMenu, setShowMenu] = useState<boolean>(false);
 	const [showInfoModal, setShowInfoModal] = useState<boolean>(false);
 	const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+	const [showEditModal, setShowEditModal] = useState<boolean>(false);
 	const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 	const [pointItem, setPointItem] = useState<any>({});
 	const [deletePoints] = useDeletePointsMutation();
+
 	return (
 		<div>
 			<b className="prueba">Historial de TontoPoints:</b>
@@ -49,7 +52,14 @@ const PointsHistory: React.FC<Props> = ({
 				>
 					Info
 				</MenuItem>
-				<MenuItem>Editar</MenuItem>
+				<MenuItem
+					onItemClick={() => {
+						setShowEditModal(true);
+						setShowMenu(false);
+					}}
+				>
+					Editar
+				</MenuItem>
 				<MenuItem
 					onItemClick={() => {
 						setShowDeleteModal(true);
@@ -87,6 +97,19 @@ const PointsHistory: React.FC<Props> = ({
 						{pointItem.amount}
 					</div>
 				</div>
+			</ModalComponent>
+			<ModalComponent
+				title="Editar puntos"
+				submitCallback={() => {
+					setShowEditModal(false);
+					handleRefetch();
+				}}
+				closeCallback={() => {
+					setShowEditModal(false);
+				}}
+				show={showEditModal}
+			>
+				<EditPointsForm pointsId={pointItem.id} />
 			</ModalComponent>
 			<ModalComponent
 				show={showDeleteModal}

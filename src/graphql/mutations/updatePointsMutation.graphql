@@ -1,0 +1,7 @@
+mutation UpdatePoints($id: String!, $reason: String, $amount: Float) {
+	updatePoints(id: $id, reason: $reason, amount: $amount) {
+		createdAt
+		amount
+		reason
+	}
+}

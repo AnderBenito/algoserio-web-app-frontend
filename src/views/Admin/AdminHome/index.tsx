@@ -10,7 +10,6 @@ const AdminHome = () => {
 	});
 	const { data, loading, error, refetch } = useGetPaginatedPointsQuery({
 		variables: { take: page.total, skip: page.page * page.total },
-		fetchPolicy: "network-only",
 	});
 
 	const handleRefetch = async () => {

@@ -1,3 +1,5 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
@@ -7,7 +9,13 @@ const AdminNavBar: React.FC = () => {
 	const [showNav, setShowNav] = useState(false);
 	return (
 		<div className={styles.nav_wrapper}>
-			<button onClick={() => setShowNav(!showNav)}>Show</button>
+			<div className="container-fluid pt-2 pb-2">
+				<FontAwesomeIcon
+					className={styles.icon}
+					onClick={() => setShowNav(!showNav)}
+					icon={!showNav ? faBars : faTimes}
+				/>
+			</div>
 			<AnimatePresence>
 				{showNav && (
 					<>
@@ -15,6 +23,7 @@ const AdminNavBar: React.FC = () => {
 							className={styles.nav_sidebar}
 							initial={{ x: -200 }}
 							animate={{ x: 0 }}
+							transition={{ type: "spring", mass: 0.2 }}
 							exit={{ x: -200 }}
 						>
 							<ul>

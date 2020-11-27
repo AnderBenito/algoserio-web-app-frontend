@@ -18,5 +18,5 @@ export function useForm<T>(initialValue: T) {
 		setForm(initialValue);
 	};
 
-	return { form, onFormChange, clearForm };
+	return { form, onFormChange, clearForm, setForm };
 }
