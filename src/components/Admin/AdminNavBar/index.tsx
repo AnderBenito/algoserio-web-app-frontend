@@ -29,7 +29,17 @@ const AdminNavBar: React.FC = () => {
 							<ul>
 								<li>
 									<Link onClick={() => setShowNav(false)} to="/admin">
-										Admin
+										Añadir puntos
+									</Link>
+								</li>
+								<li>
+									<Link onClick={() => setShowNav(false)} to="/admin/history">
+										Historial
+									</Link>
+								</li>
+								<li>
+									<Link onClick={() => setShowNav(false)} to="/admin/ranking">
+										Ranking
 									</Link>
 								</li>
 								<li>

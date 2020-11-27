@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useReducer, useState } from "react";
 import LoadingSpinner from "../../Loading/LoadingSpinner";
 import TableHistory from "../../Tables/TableHistory";
 import {
@@ -9,71 +9,115 @@ import Pagination from "../../Pagination";
 import ContextMenu from "../../ContextMenu";
 import MenuItem from "../../ContextMenu/MenuItem";
 import ModalComponent from "../../Modal";
-import { AdminContext } from "../../../context/AdminProvider";
+import EditPointsForm from "../../EditPointsForm";
 
-interface Props {
-	refetching?: boolean;
+interface Action {
+	type: string;
+	payload?: any;
+}
+interface Props {}
+
+const initialState = {
+	showMenu: false,
+	showInfo: false,
+	showEdit: false,
+	showDelete: false,
+	mousePos: { x: 0, y: 0 },
+	pointItem: {},
+};
+
+function reducer(state: any, { type, payload }: Action) {
+	switch (type) {
+		case "show_info":
+			return {
+				...state,
+				showInfo: true,
+				showMenu: false,
+			};
+
+		case "show_edit":
+			return {
+				...state,
+				showEdit: true,
+				showMenu: false,
+			};
+
+		case "show_delete":
+			return {
+				...state,
+				showDelete: true,
+				showMenu: false,
+			};
+
+		case "close_modal":
+			return {
+				...state,
+				showInfo: false,
+				showEdit: false,
+				showDelete: false,
+				showMenu: false,
+			};
+
+		case "open_menu":
+			return {
+				...state,
+				showMenu: true,
+				mousePos: {
+					x: payload.clientX,
+					y: payload.clientY,
+				},
+			};
+	}
 }
 
 const PointsHistory: React.FC<Props> = (props) => {
-	const { setRefetchData } = useContext(AdminContext);
 	const [page, setPage] = useState({
 		page: 0,
 		total: 5,
 	});
-	const [showMenu, setShowMenu] = useState<boolean>(false);
-	const [showInfoModal, setShowInfoModal] = useState<boolean>(false);
-	const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
-	const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 	const [pointItem, setPointItem] = useState<any>({});
+	const [state, dispatch] = useReducer(reducer, initialState);
 
-	const {
-		data,
-		loading: dataLoading,
-		error: dataError,
-		refetch,
-	} = useGetPaginatedPointsQuery({
+	const { data, loading, error, refetch } = useGetPaginatedPointsQuery({
 		variables: { take: page.total, skip: page.page * page.total },
 		fetchPolicy: "network-only",
 	});
 
 	const [deletePoints] = useDeletePointsMutation();
 
-	useEffect(() => {
-		refetch();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [props.refetching]);
-
 	const component = () => {
 		return (
-			<div className="container mt-2 mb-2">
-				<b className="prueba">Historial de TontoPoints:</b>
+			<div>
 				<TableHistory
 					data={data?.getPaginatedPoints!}
 					setItem={setPointItem}
 					onRowClick={(e) => {
-						setMousePos({
-							x: e.clientX,
-							y: e.clientY,
-						});
-						setShowMenu(true);
+						dispatch({ type: "open_menu", payload: e });
 					}}
 				/>
 				<Pagination page={page} setPage={setPage} />
-				<ContextMenu show={showMenu} setShow={setShowMenu} mousePos={mousePos}>
+				<ContextMenu
+					show={state.showMenu}
+					setShow={() => dispatch({ type: "close_modal" })}
+					mousePos={state.mousePos}
+				>
 					<MenuItem
 						onItemClick={() => {
-							setShowInfoModal(true);
-							setShowMenu(false);
+							dispatch({ type: "show_info" });
 						}}
 					>
 						Info
 					</MenuItem>
-					<MenuItem>Editar</MenuItem>
 					<MenuItem
 						onItemClick={() => {
-							setShowDeleteModal(true);
-							setShowMenu(false);
+							dispatch({ type: "show_edit" });
+						}}
+					>
+						Editar
+					</MenuItem>
+					<MenuItem
+						onItemClick={() => {
+							dispatch({ type: "show_delete" });
 						}}
 					>
 						Borrar
@@ -82,12 +126,12 @@ const PointsHistory: React.FC<Props> = (props) => {
 				<ModalComponent
 					title="Información de los puntos"
 					submitCallback={() => {
-						setShowInfoModal(false);
+						dispatch({ type: "close_modal" });
 					}}
 					closeCallback={() => {
-						setShowInfoModal(false);
+						dispatch({ type: "close_modal" });
 					}}
-					show={showInfoModal}
+					show={state.showInfo}
 				>
 					<div>
 						<div>
@@ -109,20 +153,32 @@ const PointsHistory: React.FC<Props> = (props) => {
 					</div>
 				</ModalComponent>
 				<ModalComponent
-					show={showDeleteModal}
+					title="Editar puntos"
+					submitCallback={() => {
+						refetch();
+						dispatch({ type: "close_modal" });
+					}}
+					closeCallback={() => {
+						dispatch({ type: "close_modal" });
+					}}
+					show={state.showEdit}
+				>
+					<EditPointsForm pointsId={pointItem.id} />
+				</ModalComponent>
+				<ModalComponent
+					show={state.showDelete}
 					title="Borrar puntos"
 					submitCallback={async () => {
-						setShowDeleteModal(false);
 						await deletePoints({
 							variables: {
 								id: pointItem.id,
 							},
 						});
 						refetch();
-						setRefetchData(true);
+						dispatch({ type: "close_modal" });
 					}}
 					closeCallback={() => {
-						setShowDeleteModal(false);
+						dispatch({ type: "close_modal" });
 					}}
 				>
 					<div>¿Seguro que quieres borrar los puntos?</div>
@@ -131,13 +187,13 @@ const PointsHistory: React.FC<Props> = (props) => {
 		);
 	};
 
-	if (dataLoading) {
+	if (loading) {
 		if (data) {
 			return component();
 		} else {
 			<LoadingSpinner />;
 		}
-	} else if (dataError) {
+	} else if (error) {
 		return <div>Error</div>;
 	} else if (data) {
 		return component();

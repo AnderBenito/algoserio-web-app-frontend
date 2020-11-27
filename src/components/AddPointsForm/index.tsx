@@ -5,19 +5,15 @@ import {
 } from "../../generated/graphql";
 import { useForm } from "../../utils/useForm";
 
-interface Props {
-	handleRefetch?: any;
-}
+interface Props {}
 
 interface Form {
 	reason: string;
 	amount: string;
 }
 
-const AddPointsForm: React.FC<Props> = ({ handleRefetch }) => {
-	const { data, loading, error } = useGetAllUserInfoQuery({
-		fetchPolicy: "network-only",
-	});
+const AddPointsForm: React.FC<Props> = () => {
+	const { data, loading, error } = useGetAllUserInfoQuery();
 	const [addPointsMutation] = useAddPointsMutation();
 
 	const [username, setUsername] = useState<string>("");
@@ -50,7 +46,6 @@ const AddPointsForm: React.FC<Props> = ({ handleRefetch }) => {
 						console.log(error);
 					} finally {
 						clearForm();
-						handleRefetch();
 					}
 				}}
 			>

@@ -22,6 +22,7 @@ const EditPointsForm: React.FC<Props> = ({ pointsId }) => {
 
 	const { data, loading, error } = useGetPointsByIdQuery({
 		variables: { id: pointsId },
+		fetchPolicy: "network-only",
 	});
 	const [updatePoints] = useUpdatePointsMutation();
 
