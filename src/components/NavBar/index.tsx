@@ -2,7 +2,11 @@ import { useApolloClient } from "@apollo/client";
 import React, { useContext } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { GlobalContext } from "../../context/GlobalProvider";
-import { useUserLogoutMutation } from "../../generated/graphql";
+import {
+	useGetCurrentUserQuery,
+	useUserLogoutMutation,
+} from "../../generated/graphql";
+import styles from "./index.module.css";
 
 const NavBar: React.FC = (props) => {
 	const { user, setUser } = useContext(GlobalContext);
@@ -10,6 +14,7 @@ const NavBar: React.FC = (props) => {
 	const client = useApolloClient();
 
 	const [logoutMutation] = useUserLogoutMutation();
+	const { data, loading } = useGetCurrentUserQuery();
 
 	const onlogOut = async (
 		event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -51,7 +56,7 @@ const NavBar: React.FC = (props) => {
 				<ul className="navbar-nav">
 					<li className="nav-item">
 						<Link className="nav-link" to="/user">
-							Mi Usuario
+							{!loading && data?.getCurrentUser.username}
 						</Link>
 					</li>
 					{adminLink()}
@@ -81,7 +86,9 @@ const NavBar: React.FC = (props) => {
 	};
 
 	return (
-		<nav className="navbar navbar-expand-sm navbar-dark bg-dark">
+		<nav
+			className={`navbar navbar-expand-sm navbar-dark bg-dark ${styles.navbar_wrapper}`}
+		>
 			<span className="navbar-text">
 				<Link className="nav-link" to="/">
 					AlgoSerio &#8482;

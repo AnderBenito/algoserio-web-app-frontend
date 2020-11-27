@@ -276,7 +276,7 @@ export type GetCurrentUserQuery = (
   { __typename?: 'Query' }
   & { getCurrentUser: (
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'name' | 'username'>
+    & Pick<User, 'id' | 'name' | 'username' | 'email'>
   ) }
 );
 
@@ -676,6 +676,7 @@ export const GetCurrentUserDocument = gql`
     id
     name
     username
+    email
   }
 }
     `;
