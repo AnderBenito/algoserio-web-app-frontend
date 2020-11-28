@@ -4,7 +4,7 @@ const userInitialState = {
 		isAdmin: false,
 		username: "",
 	},
-	isLoading: false,
+	isLoading: true,
 	error: false,
 };
 
