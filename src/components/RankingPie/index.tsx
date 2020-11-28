@@ -29,7 +29,9 @@ function setOptions(arr: any) {
 }
 
 const RankingPie: React.FC = () => {
-	const { data, loading, error } = useGetTotalPointsPerUSerQuery();
+	const { data, loading, error } = useGetTotalPointsPerUSerQuery({
+		fetchPolicy: "network-only",
+	});
 
 	if (loading) return <LoadingSpinner />;
 	else if (error) return <div>Error</div>;
