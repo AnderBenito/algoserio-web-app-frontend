@@ -23,8 +23,8 @@ const UserProfile = lazy(() => import("../../views/User"));
 // };
 
 const PrivateRoute: React.FC<any> = ({ ...props }) => {
-	const { user } = useContext(GlobalContext);
-	if (!user.isAdmin) return <Redirect to="/" />;
+	const { userState } = useContext(GlobalContext);
+	if (!userState.data?.isAdmin) return <Redirect to="/" />;
 	return <Route {...props} />;
 };
 

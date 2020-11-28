@@ -9,7 +9,7 @@ import {
 import styles from "./index.module.css";
 
 const NavBar: React.FC = (props) => {
-	const { user, setUser } = useContext(GlobalContext);
+	const { userState, userDispatch } = useContext(GlobalContext);
 	const history = useHistory();
 	const client = useApolloClient();
 
@@ -20,10 +20,7 @@ const NavBar: React.FC = (props) => {
 		event: React.MouseEvent<HTMLDivElement, MouseEvent>
 	) => {
 		event.preventDefault();
-		setUser({
-			loggedIn: false,
-			isAdmin: false,
-		});
+		userDispatch({ type: "logout" });
 		localStorage.removeItem("accessToken");
 		try {
 			await logoutMutation();
@@ -35,8 +32,8 @@ const NavBar: React.FC = (props) => {
 	};
 
 	const adminLink = () => {
-		if (!user) return null;
-		if (user.isAdmin) {
+		if (!userState.data) return null;
+		if (userState.data.isAdmin) {
 			console.log("Is admin");
 			return (
 				<li className="nav-item">
@@ -51,7 +48,7 @@ const NavBar: React.FC = (props) => {
 	};
 
 	const navComponent = () => {
-		if (user.loggedIn) {
+		if (userState.data?.loggedIn) {
 			return (
 				<ul className="navbar-nav">
 					<li className="nav-item">

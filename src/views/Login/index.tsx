@@ -14,7 +14,7 @@ const Login: React.FC<RouteComponentProps> = (props) => {
 		password: "",
 	});
 
-	const { setUser } = useContext(GlobalContext);
+	const { userDispatch } = useContext(GlobalContext);
 
 	const [loginMutation, { loading, error }] = useUserLoginMutation();
 
@@ -32,10 +32,7 @@ const Login: React.FC<RouteComponentProps> = (props) => {
 			const token = res.data!.loginUser.accessToken;
 			setAccessToken(token);
 			const { isAdmin } = jwtDecode(token) as any;
-			setUser({
-				loggedIn: true,
-				isAdmin,
-			});
+			userDispatch({ type: "login_success", payload: { isAdmin } });
 
 			props.history.push("/");
 		} catch (e) {

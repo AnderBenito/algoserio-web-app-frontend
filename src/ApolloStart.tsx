@@ -15,7 +15,7 @@ import { GlobalContext } from "./context/GlobalProvider";
 interface Props {}
 
 const ApolloStart: React.FC<Props> = (props) => {
-	const { setUser } = useContext(GlobalContext);
+	const { userDispatch } = useContext(GlobalContext);
 	const httpLink = createHttpLink({
 		uri: "http://localhost:5000/graphql",
 		credentials: "include",
@@ -69,10 +69,7 @@ const ApolloStart: React.FC<Props> = (props) => {
 			console.warn("Your refresh token is invalid. Try to relogin");
 			console.error(err);
 			//Log out
-			setUser({
-				isAdmin: false,
-				loggedIn: false,
-			});
+			userDispatch({ type: "logout" });
 			setAccessToken("");
 		},
 	});

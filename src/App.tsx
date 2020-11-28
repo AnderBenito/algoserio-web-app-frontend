@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import { GlobalContext } from "./context/GlobalProvider";
@@ -11,39 +11,29 @@ import RoutesComponent from "./components/RoutesComponent";
 interface Props {}
 
 const App: React.FC<Props> = () => {
-	const [loading, setLoading] = useState<boolean>(true);
-	const { setUser } = useContext(GlobalContext);
+	const { userState, userDispatch } = useContext(GlobalContext);
 
 	useEffect(
 		() => {
-			setLoading(true);
+			userDispatch({ type: "login_in" });
 
 			fetchRequestToken()
 				.then((data) => {
 					if (data.accessToken) {
 						setAccessToken(data.accessToken);
 						const { isAdmin } = jwtDecode(data.accessToken) as any;
-						setUser({
-							isAdmin,
-							loggedIn: true,
-						});
+						userDispatch({ type: "login_success", payload: { isAdmin } });
 					}
 				})
 				.catch((error) => {
 					console.log(error);
-					setUser({
-						isAdmin: false,
-						loggedIn: false,
-					});
-				})
-				.finally(() => {
-					setLoading(false);
+					userDispatch({ type: "login_error" });
 				});
 		}, // eslint-disable-next-line
 		[]
 	);
 
-	if (loading) {
+	if (userState.isLoading) {
 		return <LoadingSpinner />;
 	}
 

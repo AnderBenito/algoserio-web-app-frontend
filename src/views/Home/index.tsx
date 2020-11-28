@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { GlobalContext } from "../../context/GlobalProvider";
 
 const Home: React.FC = () => {
-	const { user } = useContext(GlobalContext);
+	const { userState } = useContext(GlobalContext);
 	return (
 		<div className="container p-4">
 			<p className="text-justify lead">
@@ -16,7 +16,7 @@ const Home: React.FC = () => {
 			<button
 				className="btn btn-primary"
 				onClick={() => {
-					console.log(user);
+					console.log(userState);
 				}}
 			>
 				Click
