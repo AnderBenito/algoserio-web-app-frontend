@@ -6,7 +6,9 @@ import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import { GlobalProvider } from "./context/GlobalProvider";
 import ApolloStart from "./ApolloStart";
+require("dotenv").config();
 
+console.log(process.env);
 ReactDOM.render(
 	<React.StrictMode>
 		<GlobalProvider>

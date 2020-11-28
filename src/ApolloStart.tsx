@@ -17,7 +17,7 @@ interface Props {}
 const ApolloStart: React.FC<Props> = (props) => {
 	const { userDispatch } = useContext(GlobalContext);
 	const httpLink = createHttpLink({
-		uri: "http://localhost:5000/graphql",
+		uri: `${process.env.REACT_APP_API_URL}/graphql`,
 		credentials: "include",
 	});
 
@@ -56,7 +56,7 @@ const ApolloStart: React.FC<Props> = (props) => {
 			}
 		},
 		fetchAccessToken: () => {
-			return fetch("http://localhost:5000/auth/refresh_token", {
+			return fetch(`${process.env.REACT_APP_API_URL}/auth/refresh_token`, {
 				method: "POST",
 				credentials: "include",
 			});
