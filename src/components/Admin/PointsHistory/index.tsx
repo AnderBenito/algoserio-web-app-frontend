@@ -10,6 +10,7 @@ import ContextMenu from "../../ContextMenu";
 import MenuItem from "../../ContextMenu/MenuItem";
 import ModalComponent from "../../Modal";
 import EditPointsForm from "../../EditPointsForm";
+import moment from "moment";
 
 interface Action {
 	type: string;
@@ -25,6 +26,10 @@ const initialState = {
 	mousePos: { x: 0, y: 0 },
 	pointItem: {},
 };
+
+function parseDate(date: string) {
+	return moment(date).format("YYYY-MM-DD");
+}
 
 function reducer(state: any, { type, payload }: Action) {
 	switch (type) {
@@ -140,7 +145,7 @@ const PointsHistory: React.FC<Props> = (props) => {
 						</div>
 						<div>
 							<b>Fecha: </b>
-							{pointItem.createdAt}
+							{parseDate(pointItem.createdAt)}
 						</div>
 						<div>
 							<b>Razón: </b>

@@ -1,109 +1,112 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { RouteComponentProps } from "react-router-dom";
 import LoadingSpinner from "../../components/Loading/LoadingSpinner";
 import {
 	useChangeUserPasswordMutation,
 	useGetCurrentUserQuery,
 } from "../../generated/graphql";
-import { useForm } from "../../utils/useForm";
+import { Formik, Form } from "formik";
+import { MyTextInput } from "../../components/FormComponents";
 
-interface PasswordForm {
-	oldPassword: string;
-	newPassword: string;
-	confirmNewPassword: string;
-}
+const validate = (values: any) => {
+	const errors: any = {};
+	if (!values.newPassword) {
+		errors.newPassword = "Requerido";
+	}
+	if (values.confirmNewPassword !== values.newPassword) {
+		errors.confirmNewPassword = "No coinciden";
+	}
+
+	return errors;
+};
 
 const UserProfile: React.FC<RouteComponentProps> = (props) => {
-	const { form, onFormChange, clearForm } = useForm<PasswordForm>({
-		oldPassword: "",
-		newPassword: "",
-		confirmNewPassword: "",
-	});
-
 	const { loading, error, data } = useGetCurrentUserQuery({
 		fetchPolicy: "network-only",
 	});
-	const [changePasswordMutation] = useChangeUserPasswordMutation();
+	const [
+		changePasswordMutation,
+		{ data: response, error: responseError },
+	] = useChangeUserPasswordMutation();
 
-	useEffect(() => {
-		console.log("User mounted");
-	}, []);
-
-	const changePassword = async (event: React.FormEvent<HTMLFormElement>) => {
-		event.preventDefault();
-
-		if (
-			form.confirmNewPassword !== form.newPassword ||
-			!form.confirmNewPassword ||
-			!form.newPassword
-		) {
-			console.log("Dont match");
-			return;
-		}
-
-		try {
-			await changePasswordMutation({
-				variables: {
-					oldPassword: form.oldPassword,
-					newPassword: form.newPassword,
-				},
-			});
-		} catch (e) {
-			console.log(e);
-		} finally {
-			clearForm();
-		}
-	};
-
-	if (loading) {
-		console.log("Loading");
-		return <LoadingSpinner />;
-	} else if (error) {
+	if (loading) return <LoadingSpinner />;
+	else if (error) {
 		props.history.push("/auth/login");
 		return null;
 	} else if (data) {
 		return (
-			<div className="container p-5">
+			<div className="container mt-2 mb-2 pt-2">
 				<div>
 					<h1>{data.getCurrentUser.name}</h1>
 					<h5>Nombre de usuario: {data.getCurrentUser.username}</h5>
 				</div>
 				<div>
-					<form onSubmit={changePassword}>
-						<div className="form-group">
-							<label>Antigua contraseña</label>
-							<input
-								name="oldPassword"
-								value={form.oldPassword}
-								onChange={onFormChange}
-								className="form-control"
-								type="password"
-							></input>
-						</div>
-						<div className="form-group">
-							<label>Nueva contraseña</label>
-							<input
-								name="newPassword"
-								value={form.newPassword}
-								onChange={onFormChange}
-								className="form-control"
-								type="password"
-							></input>
-						</div>
-						<div className="form-group">
-							<label>Confirmar nueva contraseña</label>
-							<input
-								name="confirmNewPassword"
-								value={form.confirmNewPassword}
-								onChange={onFormChange}
-								className="form-control"
-								type="password"
-							></input>
-						</div>
-						<div className="form-group">
-							<button className="btn btn-primary">Cambiar</button>
-						</div>
-					</form>
+					<Formik
+						initialValues={{
+							oldPassword: "",
+							newPassword: "",
+							confirmNewPassword: "",
+						}}
+						validate={validate}
+						onSubmit={async (values, { setSubmitting, resetForm }) => {
+							setSubmitting(true);
+							try {
+								await changePasswordMutation({
+									variables: {
+										oldPassword: values.oldPassword,
+										newPassword: values.newPassword,
+									},
+								});
+							} catch (e) {
+								console.log(e);
+							} finally {
+								setSubmitting(false);
+								resetForm();
+							}
+						}}
+					>
+						<Form>
+							<div className="form-group">
+								<MyTextInput
+									className="form-control"
+									label="Antigua contraseña"
+									type="password"
+									name="oldPassword"
+								/>
+							</div>
+							<div className="form-group">
+								<MyTextInput
+									className="form-control"
+									label="Nueva contraseña"
+									type="password"
+									name="newPassword"
+								/>
+							</div>
+							<div className="form-group">
+								<MyTextInput
+									className="form-control"
+									label="Confirmar contraseña"
+									type="password"
+									name="confirmNewPassword"
+								/>
+							</div>
+							<div className="form-group">
+								<button type="submit" className="btn btn-primary">
+									Cambiar
+								</button>
+							</div>
+							{response?.changeUserPassword && (
+								<div className="alert alert-success" role="alert">
+									Contraseña cambiada
+								</div>
+							)}
+							{responseError && (
+								<div className="alert alert-danger" role="alert">
+									La contraseña antigua no es valida
+								</div>
+							)}
+						</Form>
+					</Formik>
 				</div>
 			</div>
 		);

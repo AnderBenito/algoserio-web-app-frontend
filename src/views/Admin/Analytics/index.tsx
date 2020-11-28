@@ -1,11 +1,13 @@
 import React from "react";
-import AnalyticsComponent from "../../../components/AnalyticsComponent";
+import RankingPie from "../../../components/RankingPie";
+import TotalPointsTimeline from "../../../components/TotalPointsTimeline";
 
 const Analytics = () => {
 	return (
 		<div className="container mt-2 mb-2">
-			Analytics
-			<AnalyticsComponent />
+			Analíticas
+			<TotalPointsTimeline />
+			<RankingPie />
 		</div>
 	);
 };

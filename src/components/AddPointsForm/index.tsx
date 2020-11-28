@@ -1,95 +1,109 @@
-import React, { useState } from "react";
+import React from "react";
 import {
 	useAddPointsMutation,
 	useGetAllUserInfoQuery,
 } from "../../generated/graphql";
-import { useForm } from "../../utils/useForm";
+import { Formik, Form } from "formik";
+import { MySelect, MyTextArea, MyTextInput } from "../FormComponents";
 
 interface Props {}
 
-interface Form {
-	reason: string;
-	amount: string;
-}
-
 const AddPointsForm: React.FC<Props> = () => {
 	const { data, loading, error } = useGetAllUserInfoQuery();
-	const [addPointsMutation] = useAddPointsMutation();
+	const [addPointsMutation, { data: response }] = useAddPointsMutation();
 
-	const [username, setUsername] = useState<string>("");
-	const { form, onFormChange, clearForm } = useForm<Form>({
-		reason: "",
-		amount: "",
-	});
+	const validate = (values: any) => {
+		const errors: any = {};
 
-	// useEffect(() => {
-	// 	if (users) {
-	// 		setUsername(users[0].name);
-	// 	}
-	// }, []);
+		if (!values.username) {
+			errors.username = "Requerido";
+		}
+		if (!values.reason) {
+			errors.reason = "Requerido";
+		}
+		if (values.amount <= 0) {
+			errors.amount = "Introduce puntos validos";
+		}
+
+		return errors;
+	};
 
 	return (
 		<div>
-			Admin Home Añadir puntos a: {username}
-			<form
-				onSubmit={async (e) => {
-					e.preventDefault();
+			<Formik
+				initialValues={{
+					username: "",
+					reason: "",
+					amount: "",
+				}}
+				validate={validate}
+				onSubmit={async (values, { setSubmitting, resetForm }) => {
+					console.log(values);
+					setSubmitting(true);
 					try {
 						await addPointsMutation({
 							variables: {
-								amount: parseFloat(form.amount),
-								reason: form.reason,
-								username,
+								amount: parseFloat(values.amount),
+								reason: values.reason,
+								username: values.username,
 							},
 						});
 					} catch (error) {
 						console.log(error);
 					} finally {
-						clearForm();
+						setSubmitting(false);
+						resetForm();
 					}
 				}}
 			>
-				{!loading && !error && data && (
-					<select
-						className="custom-select"
-						value={username}
-						onChange={(e) => setUsername(e.target.value)}
-					>
-						<option>---</option>
-						{data.getAllUsers.map((user) => {
-							return (
-								<option key={user.id} value={user.username}>
-									{user.name}
-								</option>
-							);
-						})}
-					</select>
-				)}
-				<div className="form-group">
-					<label>Razón</label>
-					<textarea
-						name="reason"
-						value={form.reason}
-						onChange={onFormChange}
-						className="form-control"
-					></textarea>
-				</div>
-				<div className="form-group">
-					<label>Cantidad de puntos</label>
-					<input
-						name="amount"
-						value={form.amount}
-						onChange={onFormChange}
-						className="form-control"
-						type="number"
-					></input>
-				</div>
-				<div>
-					<button type="submit" className="btn btn-primary">
-						Añadir
-					</button>
-				</div>
-			</form>
+				<Form>
+					{!loading && !error && data && (
+						<div className="form-group">
+							<MySelect
+								label="Selecciona usuario"
+								name="username"
+								className="custom-select"
+							>
+								<option value="">...</option>
+								{data.getAllUsers.map((user) => {
+									return (
+										<option key={user.id} value={user.username}>
+											{user.name}
+										</option>
+									);
+								})}
+							</MySelect>
+						</div>
+					)}
+					<div className="form-group">
+						<MyTextArea
+							className="form-control"
+							label="Razón"
+							name="reason"
+							placeholder="Se quemó con tortelos..."
+						/>
+					</div>
+					<div className="form-group">
+						<MyTextInput
+							className="form-control"
+							label="Cantidad de puntos"
+							name="amount"
+							type="text"
+							placeholder="100"
+						/>
+					</div>
+					<div>
+						<button type="submit" className="btn btn-primary">
+							Añadir
+						</button>
+					</div>
+					{response?.addPoints && (
+						<div className="alert alert-success" role="alert">
+							Tonto Points añadidos con exito!
+						</div>
+					)}
+				</Form>
+			</Formik>
 		</div>
 	);
 };

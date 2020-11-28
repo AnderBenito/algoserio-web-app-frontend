@@ -1,0 +1,6 @@
+query GetPointsByUsername($username: String!) {
+	getPointsByUsername(username: $username) {
+		createdAt
+		amount
+	}
+}

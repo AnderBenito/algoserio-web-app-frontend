@@ -4,6 +4,8 @@ query GetAllUsers {
 		name
 		username
 		points {
+			createdAt
+			reason
 			amount
 		}
 	}

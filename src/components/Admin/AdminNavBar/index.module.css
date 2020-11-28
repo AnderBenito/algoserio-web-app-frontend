@@ -25,12 +25,13 @@
 }
 
 .nav_sidebar {
-	position: absolute;
+	position: fixed;
 	background-color: white;
 	height: 100vh;
 	width: 120px;
 	padding: 10px;
 	z-index: 20;
+	margin-top: 1px;
 }
 
 .nav_sidebar ul {

@@ -1,9 +1,9 @@
 import React from "react";
-import { Form, Formik, Field, ErrorMessage } from "formik";
+import { Form, Formik } from "formik";
 import { RouteComponentProps } from "react-router-dom";
 import LoadingButton from "../../components/Loading/LoadingButton";
 import { useRegisterUserMutation } from "../../generated/graphql";
-import styles from "./index.module.css";
+import { MyTextInput } from "../../components/FormComponents";
 
 const Register: React.FC<RouteComponentProps> = (props) => {
 	const [registerMutation, { loading }] = useRegisterUserMutation();
@@ -33,16 +33,16 @@ const Register: React.FC<RouteComponentProps> = (props) => {
 	const validate = (values: any) => {
 		const errors: any = {};
 		if (!values.name) {
-			errors.name = "Required";
+			errors.name = "Requerido";
 		}
 		if (!values.email) {
-			errors.email = "Required";
+			errors.email = "Requerido";
 		}
 		if (!values.username) {
-			errors.username = "Required";
+			errors.username = "Requerido";
 		}
 		if (!values.password) {
-			errors.password = "Required";
+			errors.password = "Requerido";
 		}
 		if (values.confirmPassword !== values.password) {
 			errors.confirmPassword = "Tienen que ser iguales";
@@ -68,43 +68,47 @@ const Register: React.FC<RouteComponentProps> = (props) => {
 			>
 				<Form>
 					<div className="form-group">
-						<label>Nombre</label>
-						<Field className="form-control" name="name" type="text" />
-						<div className={styles.error}>
-							<ErrorMessage name="name" />
-						</div>
-					</div>
-					<div className="form-group">
-						<label>Email</label>
-						<Field className="form-control" name="email" type="text" />
-						<div className={styles.error}>
-							<ErrorMessage name="email" />
-						</div>
-					</div>
-					<div className="form-group">
-						<label>Usuario</label>
-						<Field className="form-control" name="username" type="text" />
-						<div className={styles.error}>
-							<ErrorMessage name="username" />
-						</div>
-					</div>
-					<div className="form-group">
-						<label>Contrasena</label>
-						<Field className="form-control" name="password" type="password" />
-						<div className={styles.error}>
-							<ErrorMessage name="password" />
-						</div>
-					</div>
-					<div className="form-group">
-						<label>Confirmar contrasena</label>
-						<Field
+						<MyTextInput
 							className="form-control"
-							name="confirmPassword"
-							type="password"
+							label="Nombre"
+							type="text"
+							placeholder="Nombre"
+							name="name"
 						/>
-						<div className={styles.error}>
-							<ErrorMessage name="confirmPassword" />
-						</div>
+					</div>
+					<div className="form-group">
+						<MyTextInput
+							className="form-control"
+							label="Email"
+							type="text"
+							placeholder="algo@pajero.com"
+							name="email"
+						/>
+					</div>
+					<div className="form-group">
+						<MyTextInput
+							className="form-control"
+							label="Nombre de usuario"
+							type="text"
+							placeholder="Nombre de usuario"
+							name="username"
+						/>
+					</div>
+					<div className="form-group">
+						<MyTextInput
+							className="form-control"
+							label="Contraseña"
+							type="password"
+							name="password"
+						/>
+					</div>
+					<div className="form-group">
+						<MyTextInput
+							className="form-control"
+							label="Confirmar contraseña"
+							type="password"
+							name="confirmPassword"
+						/>
 					</div>
 					<LoadingButton
 						className="btn btn-primary w-100"

@@ -264,7 +264,7 @@ export type GetAllUsersQuery = (
     & Pick<User, 'id' | 'name' | 'username'>
     & { points?: Maybe<Array<(
       { __typename?: 'Points' }
-      & Pick<Points, 'amount'>
+      & Pick<Points, 'createdAt' | 'reason' | 'amount'>
     )>> }
   )> }
 );
@@ -310,6 +310,19 @@ export type GetPointsByIdQuery = (
     { __typename?: 'Points' }
     & Pick<Points, 'createdAt' | 'amount' | 'reason'>
   ) }
+);
+
+export type GetPointsByUsernameQueryVariables = Exact<{
+  username: Scalars['String'];
+}>;
+
+
+export type GetPointsByUsernameQuery = (
+  { __typename?: 'Query' }
+  & { getPointsByUsername: Array<(
+    { __typename?: 'Points' }
+    & Pick<Points, 'createdAt' | 'amount'>
+  )> }
 );
 
 export type GetTotalPointsPerUSerQueryVariables = Exact<{ [key: string]: never; }>;
@@ -640,6 +653,8 @@ export const GetAllUsersDocument = gql`
     name
     username
     points {
+      createdAt
+      reason
       amount
     }
   }
@@ -781,6 +796,40 @@ export function useGetPointsByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type GetPointsByIdQueryHookResult = ReturnType<typeof useGetPointsByIdQuery>;
 export type GetPointsByIdLazyQueryHookResult = ReturnType<typeof useGetPointsByIdLazyQuery>;
 export type GetPointsByIdQueryResult = Apollo.QueryResult<GetPointsByIdQuery, GetPointsByIdQueryVariables>;
+export const GetPointsByUsernameDocument = gql`
+    query GetPointsByUsername($username: String!) {
+  getPointsByUsername(username: $username) {
+    createdAt
+    amount
+  }
+}
+    `;
+
+/**
+ * __useGetPointsByUsernameQuery__
+ *
+ * To run a query within a React component, call `useGetPointsByUsernameQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPointsByUsernameQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPointsByUsernameQuery({
+ *   variables: {
+ *      username: // value for 'username'
+ *   },
+ * });
+ */
+export function useGetPointsByUsernameQuery(baseOptions: Apollo.QueryHookOptions<GetPointsByUsernameQuery, GetPointsByUsernameQueryVariables>) {
+        return Apollo.useQuery<GetPointsByUsernameQuery, GetPointsByUsernameQueryVariables>(GetPointsByUsernameDocument, baseOptions);
+      }
+export function useGetPointsByUsernameLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetPointsByUsernameQuery, GetPointsByUsernameQueryVariables>) {
+          return Apollo.useLazyQuery<GetPointsByUsernameQuery, GetPointsByUsernameQueryVariables>(GetPointsByUsernameDocument, baseOptions);
+        }
+export type GetPointsByUsernameQueryHookResult = ReturnType<typeof useGetPointsByUsernameQuery>;
+export type GetPointsByUsernameLazyQueryHookResult = ReturnType<typeof useGetPointsByUsernameLazyQuery>;
+export type GetPointsByUsernameQueryResult = Apollo.QueryResult<GetPointsByUsernameQuery, GetPointsByUsernameQueryVariables>;
 export const GetTotalPointsPerUSerDocument = gql`
     query GetTotalPointsPerUSer {
   getTotalPointsPerUSer {

@@ -18,7 +18,7 @@ const AdminNavBar: React.FC = () => {
 			</div>
 			<AnimatePresence>
 				{showNav && (
-					<>
+					<nav>
 						<motion.div
 							className={styles.nav_sidebar}
 							initial={{ x: -200 }}
@@ -26,24 +26,40 @@ const AdminNavBar: React.FC = () => {
 							transition={{ type: "spring", mass: 0.2 }}
 							exit={{ x: -200 }}
 						>
-							<ul>
-								<li>
-									<Link onClick={() => setShowNav(false)} to="/admin">
+							<ul className="navbar-nav">
+								<li className="nav-item">
+									<Link
+										className="nav-link"
+										onClick={() => setShowNav(false)}
+										to="/admin"
+									>
 										Añadir puntos
 									</Link>
 								</li>
-								<li>
-									<Link onClick={() => setShowNav(false)} to="/admin/history">
+								<li className="nav-item">
+									<Link
+										className="nav-link"
+										onClick={() => setShowNav(false)}
+										to="/admin/history"
+									>
 										Historial
 									</Link>
 								</li>
-								<li>
-									<Link onClick={() => setShowNav(false)} to="/admin/ranking">
+								<li className="nav-item">
+									<Link
+										className="nav-link"
+										onClick={() => setShowNav(false)}
+										to="/admin/ranking"
+									>
 										Ranking
 									</Link>
 								</li>
-								<li>
-									<Link onClick={() => setShowNav(false)} to="/admin/analytics">
+								<li className="nav-item">
+									<Link
+										className="nav-link"
+										onClick={() => setShowNav(false)}
+										to="/admin/analytics"
+									>
 										Analytics
 									</Link>
 								</li>
@@ -56,7 +72,7 @@ const AdminNavBar: React.FC = () => {
 							animate={{ opacity: 1 }}
 							exit={{ opacity: 0 }}
 						></motion.div>
-					</>
+					</nav>
 				)}
 			</AnimatePresence>
 		</div>

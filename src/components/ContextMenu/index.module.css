@@ -2,8 +2,9 @@
 	position: absolute;
 	height: 200px;
 	width: 140px;
-	background-color: #292b2c;
+	background-color: #f7f7f7;
 	z-index: 30;
+	border: 5px solid #292b2c;
 	border-radius: 10px;
 	padding: 1rem 0;
 }
@@ -21,18 +22,18 @@
 .context_menu ul {
 	list-style: none;
 	text-decoration: none;
-	padding: 0;
+	padding: 0px;
 	margin: 0;
 }
 
 .context_menu li {
-	color: white;
+	color: #292b2c;
 	padding: 5px 10px;
-	border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+	border-bottom: 1px solid #292b2c;
 	transition: 0.3s;
 	cursor: pointer;
 }
 
 .context_menu li:hover {
-	background-color: rgba(255, 255, 255, 0.3);
+	background-color: rgba(0, 1, 0, 0.3);
 }
