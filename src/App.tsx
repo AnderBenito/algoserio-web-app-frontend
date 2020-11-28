@@ -23,6 +23,8 @@ const App: React.FC<Props> = () => {
 						setAccessToken(data.accessToken);
 						const { isAdmin } = jwtDecode(data.accessToken) as any;
 						userDispatch({ type: "login_success", payload: { isAdmin } });
+					} else {
+						userDispatch({ type: "login_error" });
 					}
 				})
 				.catch((error) => {

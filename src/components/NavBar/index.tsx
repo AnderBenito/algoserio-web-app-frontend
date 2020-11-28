@@ -34,7 +34,6 @@ const NavBar: React.FC = (props) => {
 	const adminLink = () => {
 		if (!userState.data) return null;
 		if (userState.data.isAdmin) {
-			console.log("Is admin");
 			return (
 				<li className="nav-item">
 					<Link className="nav-link" to="/admin">
