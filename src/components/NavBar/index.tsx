@@ -1,11 +1,15 @@
 import { useApolloClient } from "@apollo/client";
-import React, { useContext } from "react";
+import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { AnimatePresence } from "framer-motion";
+import React, { useContext, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { GlobalContext } from "../../context/GlobalProvider";
 import {
 	useGetCurrentUserQuery,
 	useUserLogoutMutation,
 } from "../../generated/graphql";
+import SideBar from "../SideBar";
 import styles from "./index.module.css";
 
 const NavBar: React.FC = (props) => {
@@ -13,6 +17,7 @@ const NavBar: React.FC = (props) => {
 	const history = useHistory();
 	const client = useApolloClient();
 
+	const [showNav, setShowNav] = useState<boolean>(false);
 	const [logoutMutation] = useUserLogoutMutation();
 	const { data, loading } = useGetCurrentUserQuery();
 
@@ -31,67 +36,88 @@ const NavBar: React.FC = (props) => {
 		history.push("/");
 	};
 
-	const adminLink = () => {
-		if (!userState.data) return null;
-		if (userState.data.isAdmin) {
-			return (
-				<li className="nav-item">
-					<Link className="nav-link" to="/admin">
-						Admin
-					</Link>
-				</li>
-			);
-		} else {
-			return null;
-		}
-	};
-
-	const navComponent = () => {
-		if (userState.data?.loggedIn) {
-			return (
-				<ul className="navbar-nav">
-					<li className="nav-item">
-						<Link className="nav-link" to="/user">
-							{!loading && data?.getCurrentUser.username}
-						</Link>
-					</li>
-					{adminLink()}
-					<li className="nav-item">
-						<div className="nav-link" onClick={onlogOut}>
-							Cerrar Sesión
+	return (
+		<>
+			<div className={styles.navbar_wrapper}>
+				<ul>
+					<li>
+						<div>
+							<FontAwesomeIcon
+								onClick={() => setShowNav(!showNav)}
+								icon={!showNav ? faBars : faTimes}
+							/>
 						</div>
 					</li>
 				</ul>
-			);
-		} else {
-			return (
-				<ul className="navbar-nav">
-					<li className="nav-item">
-						<Link className="nav-link" to="/auth/register">
-							Regístrate
-						</Link>
-					</li>
-					<li className="nav-item">
-						<Link className="nav-link" to="/auth/login">
-							Iniciar Sesión
-						</Link>
-					</li>
-				</ul>
-			);
-		}
-	};
-
-	return (
-		<nav
-			className={`navbar navbar-expand-sm navbar-dark bg-dark ${styles.navbar_wrapper}`}
-		>
-			<span className="navbar-text">
-				<Link className="nav-link" to="/">
-					AlgoSerio &#8482;
-				</Link>
-			</span>
-			{navComponent()}
-		</nav>
+				<span>
+					<Link className={styles.navbar_title} to="/">
+						AlgoSerio &#8482;
+					</Link>
+				</span>
+			</div>
+			<AnimatePresence>
+				{showNav && (
+					<SideBar>
+						{userState.data?.loggedIn ? (
+							<>
+								<li>
+									<Link onClick={() => setShowNav(false)} to="/user">
+										{!loading && data?.getCurrentUser.username}
+									</Link>
+								</li>
+								<li>
+									<div
+										onClick={(e) => {
+											onlogOut(e);
+											setShowNav(false);
+										}}
+									>
+										Cerrar Sesión
+									</div>
+								</li>
+							</>
+						) : (
+							<>
+								<li>
+									<Link onClick={() => setShowNav(false)} to="/auth/register">
+										Regístrate
+									</Link>
+								</li>
+								<li>
+									<Link onClick={() => setShowNav(false)} to="/auth/login">
+										Iniciar Sesión
+									</Link>
+								</li>
+							</>
+						)}
+						{userState.data?.isAdmin && (
+							<>
+								<li>
+									<Link onClick={() => setShowNav(false)} to="/admin">
+										Añadir puntos
+									</Link>
+								</li>
+								<li>
+									<Link onClick={() => setShowNav(false)} to="/admin/history">
+										Historial
+									</Link>
+								</li>
+								<li>
+									<Link onClick={() => setShowNav(false)} to="/admin/ranking">
+										Ranking
+									</Link>
+								</li>
+								<li>
+									<Link onClick={() => setShowNav(false)} to="/admin/analytics">
+										Analytics
+									</Link>
+								</li>
+							</>
+						)}
+					</SideBar>
+				)}
+			</AnimatePresence>
+		</>
 	);
 };
 

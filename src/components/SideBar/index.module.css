@@ -1,0 +1,17 @@
+.nav_sidebar {
+	position: absolute;
+	background-color: #f7f7f7;
+	height: 100vh;
+	z-index: 20;
+}
+
+.nav_sidebar ul {
+	margin: 0;
+	padding: 10px;
+	text-decoration: none;
+	list-style-type: none;
+}
+
+.nav_sidebar li {
+	margin: 10px 0px;
+}

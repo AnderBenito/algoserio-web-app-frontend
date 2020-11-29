@@ -18,8 +18,7 @@ const ApolloStart: React.FC<Props> = (props) => {
 	const { userDispatch } = useContext(GlobalContext);
 	const httpLink = createHttpLink({
 		uri: `${process.env.REACT_APP_API_URL}/graphql`,
-		credentials:
-			process.env.NODE_ENV === "production" ? "same-origin" : "include",
+		credentials: "include",
 	});
 
 	const authMiddleware = new ApolloLink((operation, forward) => {

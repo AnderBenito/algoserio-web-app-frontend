@@ -1,3 +1,29 @@
+.navbar_wrapper {
+	background-color: #292b2c;
+	padding: 30px;
+	display: flex;
+	justify-content: space-between;
+	color: #f7f7f7;
+	z-index: 20;
+}
+
+.navbar_wrapper span {
+	color: #f7f7f7 !important;
+	text-decoration: none;
+}
+
+.navbar_wrapper ul {
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+	text-decoration: none;
+}
+
 .navbar_wrapper li {
 	cursor: pointer;
+}
+
+.navbar_title {
+	color: #f7f7f7 !important;
+	text-decoration: none;
 }
