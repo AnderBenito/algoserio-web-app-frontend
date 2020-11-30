@@ -1,8 +1,8 @@
 import Admin from "../views/Admin";
-import Home from "../views/Home";
-import Login from "../views/Login";
-import Register from "../views/Register";
-import UserProfile from "../views/User";
+import Home from "../views/HomeView";
+import Login from "../views/LoginView";
+import Register from "../views/RegisterView";
+import UserView from "../views/UserView";
 
 export const routes = [
 	{
@@ -29,7 +29,7 @@ export const routes = [
 	{
 		path: "/user",
 		exact: true,
-		component: UserProfile,
+		component: UserView,
 		title: "User Profile",
 		needsAuth: false,
 	},

@@ -1,21 +1,23 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
 import App from "./App";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import { GlobalProvider } from "./context/GlobalProvider";
 import ApolloStart from "./ApolloStart";
+import { ChakraProvider } from "@chakra-ui/react";
 require("dotenv").config();
 
 console.log(process.env);
 ReactDOM.render(
 	<React.StrictMode>
-		<GlobalProvider>
-			<ApolloStart>
-				<App />
-			</ApolloStart>
-		</GlobalProvider>
+		<ChakraProvider>
+			<GlobalProvider>
+				<ApolloStart>
+					<App />
+				</ApolloStart>
+			</GlobalProvider>
+		</ChakraProvider>
 	</React.StrictMode>,
 	document.getElementById("root")
 );

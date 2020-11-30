@@ -1,12 +1,12 @@
 import React, { useContext, useEffect } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
-import NavBar from "./components/NavBar";
 import { GlobalContext } from "./context/GlobalProvider";
 import { setAccessToken } from "./utils/accessToken";
 import fetchRequestToken from "./utils/fetchRequestToken";
 import LoadingSpinner from "./components/Loading/LoadingSpinner";
 import jwtDecode from "jwt-decode";
 import RoutesComponent from "./components/RoutesComponent";
+import NavBarContainer from "./containers/NavBarContainer";
 
 interface Props {}
 
@@ -42,7 +42,7 @@ const App: React.FC<Props> = () => {
 	return (
 		<div className="App">
 			<Router>
-				<NavBar />
+				<NavBarContainer />
 				<RoutesComponent />
 			</Router>
 		</div>

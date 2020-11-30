@@ -1,41 +1,31 @@
-import { useApolloClient } from "@apollo/client";
 import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { AnimatePresence } from "framer-motion";
-import React, { useContext, useState } from "react";
-import { Link, useHistory } from "react-router-dom";
-import { GlobalContext } from "../../context/GlobalProvider";
-import {
-	useGetCurrentUserQuery,
-	useUserLogoutMutation,
-} from "../../generated/graphql";
+import React from "react";
+import { Link } from "react-router-dom";
 import SideBar from "../SideBar";
 import styles from "./index.module.css";
 
-const NavBar: React.FC = (props) => {
-	const { userState, userDispatch } = useContext(GlobalContext);
-	const history = useHistory();
-	const client = useApolloClient();
-
-	const [showNav, setShowNav] = useState<boolean>(false);
-	const [logoutMutation] = useUserLogoutMutation();
-	const { data, loading } = useGetCurrentUserQuery();
-
-	const onlogOut = async (
-		event: React.MouseEvent<HTMLDivElement, MouseEvent>
-	) => {
-		event.preventDefault();
-		userDispatch({ type: "logout" });
-		localStorage.removeItem("accessToken");
-		try {
-			await logoutMutation();
-			await client.resetStore();
-		} catch (e) {
-			console.log(e);
-		}
-		history.push("/");
-	};
-
+interface Props {
+	handleClose: any;
+	toggleNav: any;
+	handleLogout: any;
+	isAdmin: boolean;
+	loggedIn: boolean;
+	showNav: boolean;
+	loading: boolean;
+	username: any;
+}
+const NavBar: React.FC<Props> = ({
+	handleClose,
+	isAdmin,
+	loggedIn,
+	showNav,
+	loading,
+	handleLogout,
+	toggleNav,
+	username,
+}) => {
 	return (
 		<>
 			<div className={styles.navbar_wrapper}>
@@ -43,7 +33,7 @@ const NavBar: React.FC = (props) => {
 					<li>
 						<div>
 							<FontAwesomeIcon
-								onClick={() => setShowNav(!showNav)}
+								onClick={toggleNav}
 								icon={!showNav ? faBars : faTimes}
 							/>
 						</div>
@@ -58,57 +48,50 @@ const NavBar: React.FC = (props) => {
 			<AnimatePresence>
 				{showNav && (
 					<SideBar>
-						{userState.data?.loggedIn ? (
+						{loggedIn ? (
 							<>
 								<li>
-									<Link onClick={() => setShowNav(false)} to="/user">
-										{!loading && data?.getCurrentUser.username}
+									<Link onClick={handleClose} to="/user">
+										{!loading && username}
 									</Link>
 								</li>
 								<li>
-									<div
-										onClick={(e) => {
-											onlogOut(e);
-											setShowNav(false);
-										}}
-									>
-										Cerrar Sesión
-									</div>
+									<div onClick={handleLogout}>Cerrar Sesión</div>
 								</li>
 							</>
 						) : (
 							<>
 								<li>
-									<Link onClick={() => setShowNav(false)} to="/auth/register">
+									<Link onClick={handleClose} to="/auth/register">
 										Regístrate
 									</Link>
 								</li>
 								<li>
-									<Link onClick={() => setShowNav(false)} to="/auth/login">
+									<Link onClick={handleClose} to="/auth/login">
 										Iniciar Sesión
 									</Link>
 								</li>
 							</>
 						)}
-						{userState.data?.isAdmin && (
+						{isAdmin && (
 							<>
 								<li>
-									<Link onClick={() => setShowNav(false)} to="/admin">
+									<Link onClick={handleClose} to="/admin">
 										Añadir puntos
 									</Link>
 								</li>
 								<li>
-									<Link onClick={() => setShowNav(false)} to="/admin/history">
+									<Link onClick={handleClose} to="/admin/history">
 										Historial
 									</Link>
 								</li>
 								<li>
-									<Link onClick={() => setShowNav(false)} to="/admin/ranking">
+									<Link onClick={handleClose} to="/admin/ranking">
 										Ranking
 									</Link>
 								</li>
 								<li>
-									<Link onClick={() => setShowNav(false)} to="/admin/analytics">
+									<Link onClick={handleClose} to="/admin/analytics">
 										Analytics
 									</Link>
 								</li>

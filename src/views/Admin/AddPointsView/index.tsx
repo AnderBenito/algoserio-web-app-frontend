@@ -1,7 +1,7 @@
 import React from "react";
 import AddPointsForm from "../../../components/AddPointsForm";
 
-const AddPoints = () => {
+const AddPointsView: React.FC = () => {
 	return (
 		<div className="container mt-2 mb-2">
 			<AddPointsForm />
@@ -9,4 +9,4 @@ const AddPoints = () => {
 	);
 };
 
-export default AddPoints;
+export default AddPointsView;
