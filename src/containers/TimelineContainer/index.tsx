@@ -1,9 +1,7 @@
-import React, { useEffect } from "react";
-import LoadingSpinner from "../Loading/LoadingSpinner";
-import Chart from "react-apexcharts";
+import React from "react";
+import LoadingSpinner from "../../components/Loading/LoadingSpinner";
+import Timeline from "../../components/Timeline";
 import { useGetAllUsersQuery } from "../../generated/graphql";
-import styles from "./index.module.css";
-
 const options = {
 	xaxis: {
 		type: "datetime",
@@ -55,28 +53,17 @@ function setSeries(arr: any) {
 		};
 	});
 }
-
-const AnalyticsComponent = () => {
+const TimelineContainer: React.FC = () => {
 	const { data, loading, error } = useGetAllUsersQuery({
 		fetchPolicy: "network-only",
 	});
 
-	useEffect(() => {}, [data]);
-
 	if (loading) return <LoadingSpinner />;
 	else if (error) return <div>Error</div>;
 	else if (data) {
-		return (
-			<div className={styles.chart_wrapper}>
-				<Chart
-					options={options}
-					series={setSeries(data.getAllUsers)}
-					type="line"
-				/>
-			</div>
-		);
+		return <Timeline options={options} series={setSeries(data.getAllUsers)} />;
 	}
 	return null;
 };
 
-export default AnalyticsComponent;
+export default TimelineContainer;

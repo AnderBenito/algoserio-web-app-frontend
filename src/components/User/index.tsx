@@ -1,4 +1,4 @@
-import { Button, Container } from "@chakra-ui/react";
+import { Alert, AlertIcon, Box, Button, Container } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import React from "react";
 import { MyTextInput } from "../FormComponents";
@@ -52,10 +52,20 @@ const User: React.FC<Props> = (props) => {
 						Cambiar
 					</Button>
 
-					{props.response.data && <div>Contraseña cambiada</div>}
-					{props.response.error && (
-						<div>La contraseña antigua no es valida</div>
-					)}
+					<Box paddingTop={2}>
+						{props.response.data && (
+							<Alert status="success">
+								<AlertIcon />
+								Contraseña cambiada correctamente
+							</Alert>
+						)}
+						{props.response.error && (
+							<Alert status="error">
+								<AlertIcon />
+								La contraseña antigua no es correcta
+							</Alert>
+						)}
+					</Box>
 				</Form>
 			</Formik>
 		</Container>

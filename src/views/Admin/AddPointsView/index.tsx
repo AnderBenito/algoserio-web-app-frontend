@@ -1,12 +1,8 @@
 import React from "react";
-import AddPointsForm from "../../../components/AddPointsForm";
+import AddPointsContainer from "../../../containers/AddPointsContainer";
 
 const AddPointsView: React.FC = () => {
-	return (
-		<div className="container mt-2 mb-2">
-			<AddPointsForm />
-		</div>
-	);
+	return <AddPointsContainer />;
 };
 
 export default AddPointsView;
