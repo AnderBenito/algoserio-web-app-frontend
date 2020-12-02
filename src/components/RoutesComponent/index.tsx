@@ -3,11 +3,11 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import LoadingSpinner from "../Loading/LoadingSpinner";
 import { GlobalContext } from "../../context/GlobalProvider";
 
-const Admin = lazy(() => import("../../views/Admin"));
+const AdminView = lazy(() => import("../../views/AdminView"));
 const HomeView = lazy(() => import("../../views/HomeView"));
 const LoginView = lazy(() => import("../../views/LoginView"));
 const RegisterView = lazy(() => import("../../views/RegisterView"));
-const UserProfile = lazy(() => import("../../views/UserView"));
+const UserView = lazy(() => import("../../views/UserView"));
 
 const PrivateRoute: React.FC<any> = ({ ...props }) => {
 	const { userState } = useContext(GlobalContext);
@@ -22,8 +22,8 @@ const RoutesComponent: React.FC = () => {
 				<Route exact path="/" component={HomeView} />
 				<Route exact path="/auth/login" component={LoginView} />
 				<Route exact path="/auth/register" component={RegisterView} />
-				<Route exact path="/user" component={UserProfile} />
-				<PrivateRoute path="/admin" component={Admin} />
+				<Route exact path="/user" component={UserView} />
+				<PrivateRoute path="/admin" component={AdminView} />
 			</Switch>
 		</Suspense>
 	);

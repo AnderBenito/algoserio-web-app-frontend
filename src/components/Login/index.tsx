@@ -1,4 +1,4 @@
-import { Button, Container } from "@chakra-ui/react";
+import { Alert, AlertIcon, Button, Container } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import React from "react";
 import { MyTextInput } from "../FormComponents";
@@ -31,7 +31,12 @@ const Login: React.FC<Props> = ({
 					>
 						Iniciar Sesión
 					</Button>
-					{error && <div>Error</div>}
+					{error && (
+						<Alert marginTop={2} status="error">
+							<AlertIcon />
+							Nombre de usuario o contraseña incorrectos
+						</Alert>
+					)}
 				</Form>
 			</Container>
 		</Formik>

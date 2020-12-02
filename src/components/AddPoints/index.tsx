@@ -70,7 +70,7 @@ const AddPoints: React.FC<Props> = (props) => {
 						Añadir
 					</Button>
 
-					<Box paddingTop={2}>{renderAlert()}</Box>
+					<Box marginTop={2}>{renderAlert()}</Box>
 				</Form>
 			</Formik>
 		</Container>

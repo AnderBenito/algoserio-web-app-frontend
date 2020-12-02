@@ -7,7 +7,7 @@ const HistoryView = lazy(() => import("./HistoryView"));
 const AnalyticsView = lazy(() => import("./AnalyticsView"));
 const RankingView = lazy(() => import("./RankingView"));
 
-const Admin: React.FC = () => {
+const AdminView: React.FC = () => {
 	return (
 		<AdminProvider>
 			<>
@@ -20,4 +20,4 @@ const Admin: React.FC = () => {
 	);
 };
 
-export default Admin;
+export default AdminView;
