@@ -6,7 +6,7 @@ interface Props {
 	data: any;
 }
 
-export const Table: React.FC<Props> = ({ columns, data }) => {
+export const Table: React.FC<Props & any> = ({ columns, data, ...rest }) => {
 	const memoData = useMemo(() => data, [data]);
 	const memoColumns = useMemo(() => columns, [columns]);
 
@@ -19,7 +19,7 @@ export const Table: React.FC<Props> = ({ columns, data }) => {
 	} = useTable({ columns: memoColumns, data: memoData });
 
 	return (
-		<table id="myTable" {...getTableProps()}>
+		<table {...rest} {...getTableProps()}>
 			<thead>
 				{headerGroups.map((headerGroup) => (
 					<tr {...headerGroup.getHeaderGroupProps()}>

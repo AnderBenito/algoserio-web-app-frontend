@@ -29,17 +29,19 @@ export const Table: React.FC<BoxProps> = (props) => {
 };
 
 interface TableHeaderRowProps {
-	headerGroup: any;
+	headerGroup?: any;
 }
-export const TableHeaderRow: React.FC<TableHeaderRowProps> = ({
-	headerGroup,
-}) => {
+export const TableHeaderRow: React.FC<BoxProps & TableHeaderRowProps> = (
+	props
+) => {
 	return (
-		<tr {...headerGroup.getHeaderGroupProps()}>
-			{headerGroup.headers.map((column: any) => (
-				<th {...column.getHeaderProps()}>{column.render("Header")}</th>
+		<Box as="tr" {...props.headerGroup.getHeaderGroupProps()}>
+			{props.headerGroup.headers.map((column: any) => (
+				<Box as="th" {...column.getHeaderProps()}>
+					{column.render("Header")}
+				</Box>
 			))}
-		</tr>
+		</Box>
 	);
 };
 
@@ -47,23 +49,28 @@ export const TableHead: React.FC<BoxProps> = (props) => {
 	const { headerGroups } = useContext(TableContext);
 	return (
 		<Box as="thead" {...props}>
-			{headerGroups.map((headerGroup: any, index: number) => (
-				<TableHeaderRow key={index} headerGroup={headerGroup} />
-			))}
+			{headerGroups.map((headerGroup: any, index: number) =>
+				// <TableHeaderRow key={index} headerGroup={headerGroup} />
+				React.cloneElement(props.children as any, { key: index, headerGroup })
+			)}
 		</Box>
 	);
 };
 
 interface TableBodyRowProps {
-	row: any;
+	row?: any;
 }
-export const TableBodyRow: React.FC<TableBodyRowProps> = ({ row }) => {
+export const TableBodyRow: React.FC<BoxProps & TableBodyRowProps> = (props) => {
 	return (
-		<tr {...row.getRowProps()}>
-			{row.cells.map((cell: any) => {
-				return <td {...cell.getCellProps()}>{cell.render("Cell")}</td>;
+		<Box as="tr" {...props.row.getRowProps()}>
+			{props.row.cells.map((cell: any) => {
+				return (
+					<Box as="td" {...cell.getCellProps()}>
+						{cell.render("Cell")}
+					</Box>
+				);
 			})}
-		</tr>
+		</Box>
 	);
 };
 
@@ -73,7 +80,8 @@ export const TableBody: React.FC<BoxProps> = (props) => {
 		<Box as="tbody" {...props} {...getTableBodyProps()}>
 			{rows.map((row: any, index: number) => {
 				prepareRow(row);
-				return <TableBodyRow key={index} row={row} />;
+				// return <TableBodyRow key={index} row={row} />;
+				return React.cloneElement(props.children as any, { key: index, row });
 			})}
 		</Box>
 	);

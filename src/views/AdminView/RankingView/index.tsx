@@ -1,7 +1,14 @@
 import React from "react";
+import RankingPieContainer from "../../../containers/RankingPieContainer";
+import RankingTableContainer from "../../../containers/RankingTableContainer";
 
 const Ranking = () => {
-	return <div className="container mt-2 mb-2">Ranking de puntuación</div>;
+	return (
+		<>
+			<RankingTableContainer />
+			<RankingPieContainer />
+		</>
+	);
 };
 
 export default Ranking;

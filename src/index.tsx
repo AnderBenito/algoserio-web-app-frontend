@@ -8,7 +8,6 @@ import ApolloStart from "./ApolloStart";
 import { ChakraProvider } from "@chakra-ui/react";
 require("dotenv").config();
 
-console.log(process.env);
 ReactDOM.render(
 	<React.StrictMode>
 		<ChakraProvider>
