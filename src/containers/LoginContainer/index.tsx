@@ -2,12 +2,12 @@ import jwtDecode from "jwt-decode";
 import React, { useContext } from "react";
 import { useHistory } from "react-router-dom";
 import Login from "../../components/Login";
-import { GlobalContext } from "../../context/GlobalProvider";
+import { AuthContext } from "../../context/AuthProvider";
 import { useUserLoginMutation } from "../../generated/graphql";
 import { setAccessToken } from "../../utils/accessToken";
 
 const LoginContainer: React.FC = () => {
-	const { userDispatch } = useContext(GlobalContext);
+	const { userDispatch } = useContext(AuthContext);
 	const [loginMutation, { loading, error }] = useUserLoginMutation();
 
 	const history = useHistory();

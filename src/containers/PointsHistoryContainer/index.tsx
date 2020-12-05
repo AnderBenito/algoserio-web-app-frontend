@@ -1,11 +1,17 @@
 import moment from "moment";
-import React from "react";
+import React, { useContext } from "react";
 import LoadingSpinner from "../../components/Loading/LoadingSpinner";
-import PointsHistory from "../../components/PointsHistory";
-import { useGetAllPointsQuery } from "../../generated/graphql";
+import PointsHistory from "../../components/AdminComponents/PointsHistory";
+import { useGetAllGalaPointsQuery } from "../../generated/graphql";
+import { GalaContext } from "../../context/GalaProvider";
 
 const PointsHistoryContainer: React.FC = () => {
-	const { data, loading, error } = useGetAllPointsQuery();
+	const { galaState } = useContext(GalaContext);
+	const { data, loading, error } = useGetAllGalaPointsQuery({
+		variables: {
+			id: galaState.data!.id,
+		},
+	});
 
 	const columns = [
 		{
@@ -19,15 +25,17 @@ const PointsHistoryContainer: React.FC = () => {
 			accessor: "user.name",
 		},
 		{
-			Header: "Razón",
-			accessor: "reason",
+			Header: "Cantidad",
+			accessor: "amount",
 		},
 	];
 
 	if (loading) return <LoadingSpinner />;
 	if (error) return <div>Error</div>;
 	else if (data) {
-		return <PointsHistory columns={columns} data={data.getAllPoints} />;
+		return (
+			<PointsHistory columns={columns} data={data.getAllGalaPoints.points} />
+		);
 	}
 	return null;
 };

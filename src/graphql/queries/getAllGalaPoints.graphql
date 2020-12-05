@@ -1,0 +1,19 @@
+query GetAllGalaPoints($id: String!) {
+	getAllGalaPoints(id: $id) {
+		id
+		name
+		createdAt
+		initDate
+		finishDate
+		points {
+			id
+			createdAt
+			amount
+			reason
+			user {
+				name
+				username
+			}
+		}
+	}
+}

@@ -1,7 +1,7 @@
 import React, { lazy, Suspense, useContext } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 import LoadingSpinner from "../Loading/LoadingSpinner";
-import { GlobalContext } from "../../context/GlobalProvider";
+import { AuthContext } from "../../context/AuthProvider";
 
 const AdminView = lazy(() => import("../../views/AdminView"));
 const HomeView = lazy(() => import("../../views/HomeView"));
@@ -10,7 +10,7 @@ const RegisterView = lazy(() => import("../../views/RegisterView"));
 const UserView = lazy(() => import("../../views/UserView"));
 
 const PrivateRoute: React.FC<any> = ({ ...props }) => {
-	const { userState } = useContext(GlobalContext);
+	const { userState } = useContext(AuthContext);
 	if (!userState.data?.isAdmin) return <Redirect to="/" />;
 	return <Route {...props} />;
 };

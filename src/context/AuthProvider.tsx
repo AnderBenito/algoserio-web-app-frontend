@@ -9,17 +9,18 @@ interface Props {}
 
 interface IContextProps {
 	userState: State<UserContext>;
+
 	userDispatch: React.Dispatch<Action>;
 }
 
-export const GlobalContext = createContext<IContextProps>({} as IContextProps);
+export const AuthContext = createContext<IContextProps>({} as IContextProps);
 
-export const GlobalProvider: React.FC<Props> = (props) => {
+export const AuthProvider: React.FC<Props> = (props) => {
 	const [userState, userDispatch] = useReducer(userReducer, userInitialState);
 
 	return (
-		<GlobalContext.Provider value={{ userState, userDispatch }}>
+		<AuthContext.Provider value={{ userState, userDispatch }}>
 			{props.children}
-		</GlobalContext.Provider>
+		</AuthContext.Provider>
 	);
 };

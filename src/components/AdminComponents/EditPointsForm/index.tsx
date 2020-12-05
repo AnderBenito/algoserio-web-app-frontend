@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import {
 	useGetPointsByIdQuery,
 	useUpdatePointsMutation,
-} from "../../generated/graphql";
-import { useForm } from "../../utils/useForm";
+} from "../../../generated/graphql";
+import { useForm } from "../../../utils/useForm";
 
 interface Form {
 	reason: string;

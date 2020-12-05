@@ -2,14 +2,16 @@ import { useApolloClient } from "@apollo/client";
 import React, { useContext, useState } from "react";
 import { useHistory } from "react-router-dom";
 import NavBar from "../../components/NavBar";
-import { GlobalContext } from "../../context/GlobalProvider";
+import { AuthContext } from "../../context/AuthProvider";
+import { GalaContext } from "../../context/GalaProvider";
 import {
 	useUserLogoutMutation,
 	useGetCurrentUserQuery,
 } from "../../generated/graphql";
 
 const NavBarContainer: React.FC = () => {
-	const { userState, userDispatch } = useContext(GlobalContext);
+	const { userState, userDispatch } = useContext(AuthContext);
+	const { galaState } = useContext(GalaContext);
 	const history = useHistory();
 	const client = useApolloClient();
 
@@ -53,6 +55,7 @@ const NavBarContainer: React.FC = () => {
 			showNav={showNav}
 			toggleNav={toggleNav}
 			username={data?.getCurrentUser.username}
+			gala={galaState.data}
 		/>
 	);
 };

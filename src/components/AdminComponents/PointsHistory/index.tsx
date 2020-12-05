@@ -1,6 +1,6 @@
 import { Center, Container } from "@chakra-ui/react";
 import React from "react";
-import { Table } from "../Table";
+import { Table } from "../../Table";
 import styles from "./index.module.css";
 
 interface Props {

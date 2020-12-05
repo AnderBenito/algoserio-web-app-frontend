@@ -3,19 +3,22 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
-import { GlobalProvider } from "./context/GlobalProvider";
+import { AuthProvider } from "./context/AuthProvider";
 import ApolloStart from "./ApolloStart";
 import { ChakraProvider } from "@chakra-ui/react";
+import { GalaProvider } from "./context/GalaProvider";
 require("dotenv").config();
 
 ReactDOM.render(
 	<React.StrictMode>
 		<ChakraProvider>
-			<GlobalProvider>
+			<AuthProvider>
 				<ApolloStart>
-					<App />
+					<GalaProvider>
+						<App />
+					</GalaProvider>
 				</ApolloStart>
-			</GlobalProvider>
+			</AuthProvider>
 		</ChakraProvider>
 	</React.StrictMode>,
 	document.getElementById("root")

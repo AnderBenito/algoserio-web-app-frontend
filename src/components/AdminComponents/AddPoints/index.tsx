@@ -1,6 +1,6 @@
 import React from "react";
 import { Formik, Form } from "formik";
-import { MySelect, MyTextArea, MyTextInput } from "../FormComponents";
+import { MySelect, MyTextArea, MyTextInput } from "../../FormComponents";
 import { Alert, AlertIcon, Box, Button, Container } from "@chakra-ui/react";
 
 interface Props {

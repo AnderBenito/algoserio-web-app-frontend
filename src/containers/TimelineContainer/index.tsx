@@ -1,6 +1,6 @@
 import React from "react";
 import LoadingSpinner from "../../components/Loading/LoadingSpinner";
-import Timeline from "../../components/Timeline";
+import Timeline from "../../components/AdminComponents/Timeline";
 import { useGetAllUsersQuery } from "../../generated/graphql";
 const options = {
 	xaxis: {

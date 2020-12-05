@@ -1,0 +1,9 @@
+query GetAllGalas {
+	getAllGalas {
+		id
+		createdAt
+		name
+		initDate
+		finishDate
+	}
+}

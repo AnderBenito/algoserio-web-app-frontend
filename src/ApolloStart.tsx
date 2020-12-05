@@ -10,12 +10,12 @@ import React, { useContext } from "react";
 import { getAccessToken, setAccessToken } from "./utils/accessToken";
 import { TokenRefreshLink } from "apollo-link-token-refresh";
 import jwtDecode from "jwt-decode";
-import { GlobalContext } from "./context/GlobalProvider";
+import { AuthContext } from "./context/AuthProvider";
 
 interface Props {}
 
 const ApolloStart: React.FC<Props> = (props) => {
-	const { userDispatch } = useContext(GlobalContext);
+	const { userDispatch } = useContext(AuthContext);
 	const httpLink = createHttpLink({
 		uri: `${process.env.REACT_APP_API_URL}/graphql`,
 		credentials: "include",

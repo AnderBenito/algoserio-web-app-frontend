@@ -1,20 +1,26 @@
 import React, { useContext, useEffect } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
-import { GlobalContext } from "./context/GlobalProvider";
+import { AuthContext } from "./context/AuthProvider";
 import { setAccessToken } from "./utils/accessToken";
 import fetchRequestToken from "./utils/fetchRequestToken";
 import LoadingSpinner from "./components/Loading/LoadingSpinner";
 import jwtDecode from "jwt-decode";
 import RoutesComponent from "./components/RoutesComponent";
 import NavBarContainer from "./containers/NavBarContainer";
+import { useGetAllGalasQuery } from "./generated/graphql";
+import { GalaContext } from "./context/GalaProvider";
 
 interface Props {}
 
 const App: React.FC<Props> = () => {
-	const { userState, userDispatch } = useContext(GlobalContext);
+	const { data, loading } = useGetAllGalasQuery();
+	const { userState, userDispatch } = useContext(AuthContext);
+
+	const { galaDispatch } = useContext(GalaContext);
 
 	useEffect(
 		() => {
+			console.log("APP MOUNTED");
 			userDispatch({ type: "login_in" });
 
 			fetchRequestToken()
@@ -35,7 +41,16 @@ const App: React.FC<Props> = () => {
 		[]
 	);
 
-	if (userState.isLoading) {
+	useEffect(() => {
+		if (data) {
+			galaDispatch({
+				type: "set_gala",
+				payload: { id: data.getAllGalas[0].id, name: data.getAllGalas[0].name },
+			});
+		}
+	}, [data, galaDispatch]);
+
+	if (userState.isLoading || loading) {
 		return <LoadingSpinner />;
 	}
 

@@ -1,5 +1,6 @@
-import React from "react";
-import AddPoints from "../../components/AddPoints";
+import React, { useContext } from "react";
+import AddPoints from "../../components/AdminComponents/AddPoints";
+import { GalaContext } from "../../context/GalaProvider";
 import {
 	useAddPointsMutation,
 	useGetAllUserInfoQuery,
@@ -31,6 +32,7 @@ const AddPointsContainer: React.FC = () => {
 		addPointsMutation,
 		{ data: response, error: responseError },
 	] = useAddPointsMutation();
+	const { galaState } = useContext(GalaContext);
 
 	const handleSubmit = async (
 		values: typeof initialValues,
@@ -44,6 +46,7 @@ const AddPointsContainer: React.FC = () => {
 					amount: parseFloat(values.amount),
 					reason: values.reason,
 					username: values.username,
+					galaId: galaState.data!.id,
 				},
 			});
 		} catch (error) {

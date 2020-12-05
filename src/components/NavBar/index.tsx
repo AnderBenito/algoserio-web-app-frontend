@@ -15,6 +15,7 @@ interface Props {
 	showNav: boolean;
 	loading: boolean;
 	username: any;
+	gala: any;
 }
 const NavBar: React.FC<Props> = ({
 	handleClose,
@@ -25,6 +26,7 @@ const NavBar: React.FC<Props> = ({
 	handleLogout,
 	toggleNav,
 	username,
+	gala,
 }) => {
 	return (
 		<>
@@ -93,6 +95,11 @@ const NavBar: React.FC<Props> = ({
 								<li>
 									<Link onClick={handleClose} to="/admin/analytics">
 										Analytics
+									</Link>
+								</li>
+								<li>
+									<Link onClick={handleClose} to="/gala">
+										{gala.name}
 									</Link>
 								</li>
 							</>
