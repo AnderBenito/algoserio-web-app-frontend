@@ -1,0 +1,3 @@
+mutation AddGala($name: String!, $initDate: String!, $finishDate: String!) {
+	addGala(name: $name, initDate: $initDate, finishDate: $finishDate)
+}

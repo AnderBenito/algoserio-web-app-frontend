@@ -1,0 +1,9 @@
+query GetGalaTotalPoints($id: String!) {
+	getGalaTotalPoints(id: $id) {
+		user {
+			name
+			username
+		}
+		totalPoints
+	}
+}

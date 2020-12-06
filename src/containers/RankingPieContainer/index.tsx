@@ -1,7 +1,8 @@
 import React from "react";
+import { useParams } from "react-router-dom";
 import LoadingSpinner from "../../components/Loading/LoadingSpinner";
 import RankingPie from "../../components/RankingPie";
-import { useGetTotalPointsPerUSerQuery } from "../../generated/graphql";
+import { useGetGalaTotalPointsQuery } from "../../generated/graphql";
 function setSeries(arr: any) {
 	return arr.map((total: any) => total.totalPoints);
 }
@@ -27,7 +28,9 @@ function setOptions(arr: any) {
 	};
 }
 const RankingPieContainer: React.FC = () => {
-	const { data, loading, error } = useGetTotalPointsPerUSerQuery({
+	const { galaId } = useParams<any>();
+	const { data, loading, error } = useGetGalaTotalPointsQuery({
+		variables: { id: galaId },
 		fetchPolicy: "network-only",
 	});
 
@@ -36,8 +39,8 @@ const RankingPieContainer: React.FC = () => {
 	else if (data) {
 		return (
 			<RankingPie
-				options={setOptions(data.getTotalPointsPerUSer)}
-				series={setSeries(data.getTotalPointsPerUSer)}
+				options={setOptions(data.getGalaTotalPoints)}
+				series={setSeries(data.getGalaTotalPoints)}
 			/>
 		);
 	}

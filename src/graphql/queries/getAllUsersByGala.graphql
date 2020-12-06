@@ -1,0 +1,12 @@
+query GetAllUsersByGala($id: String!) {
+	getAllUsersByGala(galaId: $id) {
+		id
+		name
+		username
+		points {
+			createdAt
+			reason
+			amount
+		}
+	}
+}

@@ -1,15 +1,16 @@
 import moment from "moment";
-import React, { useContext } from "react";
+import React from "react";
 import LoadingSpinner from "../../components/Loading/LoadingSpinner";
 import PointsHistory from "../../components/AdminComponents/PointsHistory";
 import { useGetAllGalaPointsQuery } from "../../generated/graphql";
-import { GalaContext } from "../../context/GalaProvider";
+import { useParams } from "react-router-dom";
 
 const PointsHistoryContainer: React.FC = () => {
-	const { galaState } = useContext(GalaContext);
+	const { galaId } = useParams<any>();
+
 	const { data, loading, error } = useGetAllGalaPointsQuery({
 		variables: {
-			id: galaState.data!.id,
+			id: galaId,
 		},
 	});
 

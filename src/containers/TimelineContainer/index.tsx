@@ -1,7 +1,8 @@
 import React from "react";
 import LoadingSpinner from "../../components/Loading/LoadingSpinner";
 import Timeline from "../../components/AdminComponents/Timeline";
-import { useGetAllUsersQuery } from "../../generated/graphql";
+import { useGetAllUsersByGalaQuery } from "../../generated/graphql";
+import { useParams } from "react-router-dom";
 const options = {
 	xaxis: {
 		type: "datetime",
@@ -54,14 +55,18 @@ function setSeries(arr: any) {
 	});
 }
 const TimelineContainer: React.FC = () => {
-	const { data, loading, error } = useGetAllUsersQuery({
+	const { galaId } = useParams<any>();
+	const { data, loading, error } = useGetAllUsersByGalaQuery({
+		variables: { id: galaId },
 		fetchPolicy: "network-only",
 	});
 
 	if (loading) return <LoadingSpinner />;
 	else if (error) return <div>Error</div>;
 	else if (data) {
-		return <Timeline options={options} series={setSeries(data.getAllUsers)} />;
+		return (
+			<Timeline options={options} series={setSeries(data.getAllUsersByGala)} />
+		);
 	}
 	return null;
 };

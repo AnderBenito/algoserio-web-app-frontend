@@ -17,6 +17,7 @@ export type Query = {
   __typename?: 'Query';
   getAllGalas: Array<Gala>;
   getAllGalaPoints: Gala;
+  getGalaTotalPoints: Array<TotalPointsPerUserResponse>;
   getAllPoints: Array<Points>;
   getPaginatedPoints: Array<Points>;
   getPointsById: Points;
@@ -25,12 +26,18 @@ export type Query = {
   hello: Scalars['String'];
   getCurrentUser: User;
   getAllUsers: Array<User>;
+  getAllUsersByGala: Array<User>;
   getPaginatedUsers: Array<User>;
   getTotalPointsPerUSer: Array<TotalPointsPerUserResponse>;
 };
 
 
 export type QueryGetAllGalaPointsArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryGetGalaTotalPointsArgs = {
   id: Scalars['String'];
 };
 
@@ -54,6 +61,11 @@ export type QueryGetPointsByUserIdArgs = {
 
 export type QueryGetPointsByUsernameArgs = {
   username: Scalars['String'];
+};
+
+
+export type QueryGetAllUsersByGalaArgs = {
+  galaId: Scalars['String'];
 };
 
 
@@ -173,6 +185,18 @@ export type LoginResponse = {
   accessToken: Scalars['String'];
   user: User;
 };
+
+export type AddGalaMutationVariables = Exact<{
+  name: Scalars['String'];
+  initDate: Scalars['String'];
+  finishDate: Scalars['String'];
+}>;
+
+
+export type AddGalaMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'addGala'>
+);
 
 export type AddPointsMutationVariables = Exact<{
   username: Scalars['String'];
@@ -313,10 +337,6 @@ export type GetAllUserInfoQuery = (
   & { getAllUsers: Array<(
     { __typename?: 'User' }
     & Pick<User, 'id' | 'name' | 'username'>
-    & { points?: Maybe<Array<(
-      { __typename?: 'Points' }
-      & Pick<Points, 'reason' | 'amount'>
-    )>> }
   )> }
 );
 
@@ -335,6 +355,23 @@ export type GetAllUsersQuery = (
   )> }
 );
 
+export type GetAllUsersByGalaQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type GetAllUsersByGalaQuery = (
+  { __typename?: 'Query' }
+  & { getAllUsersByGala: Array<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'name' | 'username'>
+    & { points?: Maybe<Array<(
+      { __typename?: 'Points' }
+      & Pick<Points, 'createdAt' | 'reason' | 'amount'>
+    )>> }
+  )> }
+);
+
 export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -344,6 +381,23 @@ export type GetCurrentUserQuery = (
     { __typename?: 'User' }
     & Pick<User, 'id' | 'name' | 'username' | 'email'>
   ) }
+);
+
+export type GetGalaTotalPointsQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type GetGalaTotalPointsQuery = (
+  { __typename?: 'Query' }
+  & { getGalaTotalPoints: Array<(
+    { __typename?: 'TotalPointsPerUserResponse' }
+    & Pick<TotalPointsPerUserResponse, 'totalPoints'>
+    & { user: (
+      { __typename?: 'User' }
+      & Pick<User, 'name' | 'username'>
+    ) }
+  )> }
 );
 
 export type GetPaginatedPointsQueryVariables = Exact<{
@@ -407,6 +461,38 @@ export type GetTotalPointsPerUSerQuery = (
 );
 
 
+export const AddGalaDocument = gql`
+    mutation AddGala($name: String!, $initDate: String!, $finishDate: String!) {
+  addGala(name: $name, initDate: $initDate, finishDate: $finishDate)
+}
+    `;
+export type AddGalaMutationFn = Apollo.MutationFunction<AddGalaMutation, AddGalaMutationVariables>;
+
+/**
+ * __useAddGalaMutation__
+ *
+ * To run a mutation, you first call `useAddGalaMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddGalaMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addGalaMutation, { data, loading, error }] = useAddGalaMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *      initDate: // value for 'initDate'
+ *      finishDate: // value for 'finishDate'
+ *   },
+ * });
+ */
+export function useAddGalaMutation(baseOptions?: Apollo.MutationHookOptions<AddGalaMutation, AddGalaMutationVariables>) {
+        return Apollo.useMutation<AddGalaMutation, AddGalaMutationVariables>(AddGalaDocument, baseOptions);
+      }
+export type AddGalaMutationHookResult = ReturnType<typeof useAddGalaMutation>;
+export type AddGalaMutationResult = Apollo.MutationResult<AddGalaMutation>;
+export type AddGalaMutationOptions = Apollo.BaseMutationOptions<AddGalaMutation, AddGalaMutationVariables>;
 export const AddPointsDocument = gql`
     mutation AddPoints($username: String!, $reason: String!, $amount: Float!, $galaId: String!) {
   addPoints(
@@ -769,10 +855,6 @@ export const GetAllUserInfoDocument = gql`
     id
     name
     username
-    points {
-      reason
-      amount
-    }
   }
 }
     `;
@@ -840,6 +922,46 @@ export function useGetAllUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type GetAllUsersQueryHookResult = ReturnType<typeof useGetAllUsersQuery>;
 export type GetAllUsersLazyQueryHookResult = ReturnType<typeof useGetAllUsersLazyQuery>;
 export type GetAllUsersQueryResult = Apollo.QueryResult<GetAllUsersQuery, GetAllUsersQueryVariables>;
+export const GetAllUsersByGalaDocument = gql`
+    query GetAllUsersByGala($id: String!) {
+  getAllUsersByGala(galaId: $id) {
+    id
+    name
+    username
+    points {
+      createdAt
+      reason
+      amount
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAllUsersByGalaQuery__
+ *
+ * To run a query within a React component, call `useGetAllUsersByGalaQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllUsersByGalaQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllUsersByGalaQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetAllUsersByGalaQuery(baseOptions: Apollo.QueryHookOptions<GetAllUsersByGalaQuery, GetAllUsersByGalaQueryVariables>) {
+        return Apollo.useQuery<GetAllUsersByGalaQuery, GetAllUsersByGalaQueryVariables>(GetAllUsersByGalaDocument, baseOptions);
+      }
+export function useGetAllUsersByGalaLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetAllUsersByGalaQuery, GetAllUsersByGalaQueryVariables>) {
+          return Apollo.useLazyQuery<GetAllUsersByGalaQuery, GetAllUsersByGalaQueryVariables>(GetAllUsersByGalaDocument, baseOptions);
+        }
+export type GetAllUsersByGalaQueryHookResult = ReturnType<typeof useGetAllUsersByGalaQuery>;
+export type GetAllUsersByGalaLazyQueryHookResult = ReturnType<typeof useGetAllUsersByGalaLazyQuery>;
+export type GetAllUsersByGalaQueryResult = Apollo.QueryResult<GetAllUsersByGalaQuery, GetAllUsersByGalaQueryVariables>;
 export const GetCurrentUserDocument = gql`
     query GetCurrentUser {
   getCurrentUser {
@@ -875,6 +997,43 @@ export function useGetCurrentUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type GetCurrentUserQueryHookResult = ReturnType<typeof useGetCurrentUserQuery>;
 export type GetCurrentUserLazyQueryHookResult = ReturnType<typeof useGetCurrentUserLazyQuery>;
 export type GetCurrentUserQueryResult = Apollo.QueryResult<GetCurrentUserQuery, GetCurrentUserQueryVariables>;
+export const GetGalaTotalPointsDocument = gql`
+    query GetGalaTotalPoints($id: String!) {
+  getGalaTotalPoints(id: $id) {
+    user {
+      name
+      username
+    }
+    totalPoints
+  }
+}
+    `;
+
+/**
+ * __useGetGalaTotalPointsQuery__
+ *
+ * To run a query within a React component, call `useGetGalaTotalPointsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetGalaTotalPointsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetGalaTotalPointsQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetGalaTotalPointsQuery(baseOptions: Apollo.QueryHookOptions<GetGalaTotalPointsQuery, GetGalaTotalPointsQueryVariables>) {
+        return Apollo.useQuery<GetGalaTotalPointsQuery, GetGalaTotalPointsQueryVariables>(GetGalaTotalPointsDocument, baseOptions);
+      }
+export function useGetGalaTotalPointsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetGalaTotalPointsQuery, GetGalaTotalPointsQueryVariables>) {
+          return Apollo.useLazyQuery<GetGalaTotalPointsQuery, GetGalaTotalPointsQueryVariables>(GetGalaTotalPointsDocument, baseOptions);
+        }
+export type GetGalaTotalPointsQueryHookResult = ReturnType<typeof useGetGalaTotalPointsQuery>;
+export type GetGalaTotalPointsLazyQueryHookResult = ReturnType<typeof useGetGalaTotalPointsLazyQuery>;
+export type GetGalaTotalPointsQueryResult = Apollo.QueryResult<GetGalaTotalPointsQuery, GetGalaTotalPointsQueryVariables>;
 export const GetPaginatedPointsDocument = gql`
     query getPaginatedPoints($skip: Float, $take: Float, $order: String = "DESC") {
   getPaginatedPoints(skip: $skip, take: $take, order: $order) {

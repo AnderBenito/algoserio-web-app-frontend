@@ -78,27 +78,30 @@ const NavBar: React.FC<Props> = ({
 						{isAdmin && (
 							<>
 								<li>
-									<Link onClick={handleClose} to="/admin">
+									<Link onClick={handleClose} to={`/admin/${gala.id}/add`}>
 										Añadir puntos
 									</Link>
 								</li>
 								<li>
-									<Link onClick={handleClose} to="/admin/history">
+									<Link onClick={handleClose} to={`/admin/${gala.id}/history`}>
 										Historial
 									</Link>
 								</li>
 								<li>
-									<Link onClick={handleClose} to="/admin/ranking">
+									<Link onClick={handleClose} to={`/admin/${gala.id}/ranking`}>
 										Ranking
 									</Link>
 								</li>
 								<li>
-									<Link onClick={handleClose} to="/admin/analytics">
+									<Link
+										onClick={handleClose}
+										to={`/admin/${gala.id}/analytics`}
+									>
 										Analytics
 									</Link>
 								</li>
 								<li>
-									<Link onClick={handleClose} to="/gala">
+									<Link onClick={handleClose} to="/admin/galas">
 										{gala.name}
 									</Link>
 								</li>

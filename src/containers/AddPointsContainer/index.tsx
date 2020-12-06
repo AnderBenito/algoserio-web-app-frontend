@@ -1,10 +1,14 @@
-import React, { useContext } from "react";
+import React from "react";
 import AddPoints from "../../components/AdminComponents/AddPoints";
-import { GalaContext } from "../../context/GalaProvider";
 import {
 	useAddPointsMutation,
 	useGetAllUserInfoQuery,
 } from "../../generated/graphql";
+
+interface Props {
+	match: any;
+	history: any;
+}
 
 const initialValues = {
 	username: "",
@@ -26,13 +30,12 @@ const validate = (values: any) => {
 
 	return errors;
 };
-const AddPointsContainer: React.FC = () => {
+const AddPointsContainer: React.FC<Props> = ({ match }) => {
 	const { data, loading, error } = useGetAllUserInfoQuery();
 	const [
 		addPointsMutation,
 		{ data: response, error: responseError },
 	] = useAddPointsMutation();
-	const { galaState } = useContext(GalaContext);
 
 	const handleSubmit = async (
 		values: typeof initialValues,
@@ -46,7 +49,7 @@ const AddPointsContainer: React.FC = () => {
 					amount: parseFloat(values.amount),
 					reason: values.reason,
 					username: values.username,
-					galaId: galaState.data!.id,
+					galaId: match.params.galaId,
 				},
 			});
 		} catch (error) {
