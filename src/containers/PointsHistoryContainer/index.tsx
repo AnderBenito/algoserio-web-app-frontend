@@ -5,6 +5,7 @@ import PointsHistory from "../../components/AdminComponents/PointsHistory";
 import { useGetAllGalaPointsQuery } from "../../generated/graphql";
 import { useParams } from "react-router-dom";
 import { useDisclosure } from "@chakra-ui/react";
+import EditPointsContainer from "../EditPointsContainer";
 
 const EditButton: React.FC<any> = ({ handleClick, cell }) => {
 	return (
@@ -23,10 +24,11 @@ const PointsHistoryContainer: React.FC = () => {
 
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [row, setRow] = useState<any>({});
-	const { data, loading, error } = useGetAllGalaPointsQuery({
+	const { data, loading, error, refetch } = useGetAllGalaPointsQuery({
 		variables: {
 			id: galaId,
 		},
+		fetchPolicy: "network-only",
 	});
 
 	const handleClick = (cell: any) => {
@@ -59,13 +61,17 @@ const PointsHistoryContainer: React.FC = () => {
 	if (error) return <div>Error</div>;
 	else if (data) {
 		return (
-			<PointsHistory
-				columns={columns}
-				data={data.getAllGalaPoints.points}
-				modalIsOpen={isOpen}
-				modalOnClose={onClose}
-				point={row}
-			/>
+			<>
+				<PointsHistory columns={columns} data={data.getAllGalaPoints.points} />
+				{isOpen && (
+					<EditPointsContainer
+						modalIsOpen={isOpen}
+						modalOnClose={onClose}
+						point={row}
+						refetch={refetch}
+					/>
+				)}
+			</>
 		);
 	}
 	return null;

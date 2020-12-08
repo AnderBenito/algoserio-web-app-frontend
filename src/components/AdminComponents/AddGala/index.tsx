@@ -2,7 +2,6 @@ import { Button, Container } from "@chakra-ui/react";
 import { Formik, Form } from "formik";
 import React from "react";
 import { MyDatePicker, MyTextInput } from "../../FormComponents";
-import "react-datepicker/dist/react-datepicker.css";
 
 interface Props {
 	initialValues: any;

@@ -10,14 +10,18 @@ import {
 } from "@chakra-ui/react";
 import { Form, useFormikContext } from "formik";
 import React from "react";
-import { MyTextInput } from "../../FormComponents";
+import { MyDatePicker, MyTextInput } from "../../FormComponents";
 
 interface Props {
-	point: any;
 	modalIsOpen: any;
 	modalOnClose: any;
+	loading: any;
 }
-const EditPoints: React.FC<Props> = ({ point, modalIsOpen, modalOnClose }) => {
+const EditPoints: React.FC<Props> = ({
+	loading,
+	modalIsOpen,
+	modalOnClose,
+}) => {
 	const { submitForm } = useFormikContext();
 
 	return (
@@ -28,9 +32,9 @@ const EditPoints: React.FC<Props> = ({ point, modalIsOpen, modalOnClose }) => {
 				<ModalCloseButton />
 				<ModalBody>
 					<Form>
+						<MyDatePicker label="Fecha" name="date" />
 						<MyTextInput label="Razón" name="reason" />
 						<MyTextInput label="Cantidad" name="amount" type="number" />
-						<MyTextInput label="En" name="createdAt" />
 					</Form>
 				</ModalBody>
 
@@ -38,7 +42,12 @@ const EditPoints: React.FC<Props> = ({ point, modalIsOpen, modalOnClose }) => {
 					<Button colorScheme="blue" mr={3} onClick={modalOnClose}>
 						Cerrar
 					</Button>
-					<Button type="submit" onClick={() => submitForm()} variant="ghost">
+					<Button
+						isLoading={loading}
+						type="submit"
+						onClick={() => submitForm()}
+						variant="ghost"
+					>
 						Guardar
 					</Button>
 				</ModalFooter>

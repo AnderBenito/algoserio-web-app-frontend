@@ -1,4 +1,5 @@
 import { Formik } from "formik";
+import moment from "moment";
 import React from "react";
 import EditPoints from "../../components/AdminComponents/EditPoints";
 import { useUpdatePointsMutation } from "../../generated/graphql";
@@ -7,18 +8,20 @@ interface Props {
 	point: any;
 	modalIsOpen: any;
 	modalOnClose: any;
+	refetch: any;
 }
 
 const EditPointsContainer: React.FC<Props> = ({
 	point,
 	modalIsOpen,
 	modalOnClose,
+	refetch,
 }) => {
-	const [updatePointsMutation] = useUpdatePointsMutation();
+	const [updatePointsMutation, { loading }] = useUpdatePointsMutation();
 
 	const initialValues = {
+		createdAt: new Date(point.createdAt),
 		reason: point.reason,
-		createdAt: point.createdAt,
 		amount: point.amount,
 	};
 
@@ -42,15 +45,15 @@ const EditPointsContainer: React.FC<Props> = ({
 		values: typeof initialValues,
 		{ resetForm }: any
 	) => {
-		console.log(values);
 		try {
 			await updatePointsMutation({
 				variables: {
 					id: point.id,
 					amount: parseFloat(values.amount),
-					reason: values.reason,
+					reason: moment(values.reason).toISOString(),
 				},
 			});
+			refetch();
 		} catch (error) {
 		} finally {
 			resetForm();
@@ -66,8 +69,8 @@ const EditPointsContainer: React.FC<Props> = ({
 		>
 			<EditPoints
 				modalIsOpen={modalIsOpen}
-				point={point}
 				modalOnClose={modalOnClose}
+				loading={loading}
 			/>
 		</Formik>
 	);
