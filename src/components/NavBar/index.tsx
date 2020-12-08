@@ -101,6 +101,11 @@ const NavBar: React.FC<Props> = ({
 									</Link>
 								</li>
 								<li>
+									<Link onClick={handleClose} to="/admin/galas/add-gala">
+										Añadir gala
+									</Link>
+								</li>
+								<li>
 									<Link onClick={handleClose} to="/admin/galas">
 										{gala.name}
 									</Link>

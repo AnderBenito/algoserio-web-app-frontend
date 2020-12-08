@@ -1,3 +1,4 @@
+import { Container } from "@chakra-ui/react";
 import React from "react";
 import Chart from "react-apexcharts";
 import styles from "./index.module.css";
@@ -9,9 +10,9 @@ interface Props {
 
 const Timeline: React.FC<Props> = (props) => {
 	return (
-		<div className={styles.chart_wrapper}>
+		<Container className={styles.chart_wrapper}>
 			<Chart options={props.options} series={props.series} type="line" />
-		</div>
+		</Container>
 	);
 };
 

@@ -7,11 +7,13 @@ const HistoryView = lazy(() => import("./HistoryView"));
 const AnalyticsView = lazy(() => import("./AnalyticsView"));
 const RankingView = lazy(() => import("./RankingView"));
 const GalasView = lazy(() => import("./GalasView"));
+const AddGalaView = lazy(() => import("./AddGalaView"));
 
 const AdminView: React.FC = () => {
 	return (
 		<AdminProvider>
 			<Route path="/admin/galas" exact component={GalasView} />
+			<Route path="/admin/galas/add-gala" exact component={AddGalaView} />
 			<Route path="/admin/:galaId/add" exact component={AddPointsView} />
 			<Route path="/admin/:galaId/history" exact component={HistoryView} />
 			<Route path="/admin/:galaId/analytics" exact component={AnalyticsView} />

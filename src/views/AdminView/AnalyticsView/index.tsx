@@ -5,7 +5,6 @@ import TimelineContainer from "../../../containers/TimelineContainer";
 const Analytics = () => {
 	return (
 		<>
-			Analíticas
 			<TimelineContainer />
 			<RankingPieContainer />
 		</>

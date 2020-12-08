@@ -1,18 +1,38 @@
 import moment from "moment";
-import React from "react";
+import React, { useState } from "react";
 import LoadingSpinner from "../../components/Loading/LoadingSpinner";
 import PointsHistory from "../../components/AdminComponents/PointsHistory";
 import { useGetAllGalaPointsQuery } from "../../generated/graphql";
 import { useParams } from "react-router-dom";
+import { useDisclosure } from "@chakra-ui/react";
+
+const EditButton: React.FC<any> = ({ handleClick, cell }) => {
+	return (
+		<button
+			onClick={() => {
+				handleClick(cell);
+			}}
+		>
+			Editar
+		</button>
+	);
+};
 
 const PointsHistoryContainer: React.FC = () => {
 	const { galaId } = useParams<any>();
 
+	const { isOpen, onOpen, onClose } = useDisclosure();
+	const [row, setRow] = useState<any>({});
 	const { data, loading, error } = useGetAllGalaPointsQuery({
 		variables: {
 			id: galaId,
 		},
 	});
+
+	const handleClick = (cell: any) => {
+		setRow(cell.row.original);
+		onOpen();
+	};
 
 	const columns = [
 		{
@@ -29,13 +49,23 @@ const PointsHistoryContainer: React.FC = () => {
 			Header: "Cantidad",
 			accessor: "amount",
 		},
+		{
+			Header: "Editar",
+			Cell: (cell: any) => <EditButton cell={cell} handleClick={handleClick} />,
+		},
 	];
 
 	if (loading) return <LoadingSpinner />;
 	if (error) return <div>Error</div>;
 	else if (data) {
 		return (
-			<PointsHistory columns={columns} data={data.getAllGalaPoints.points} />
+			<PointsHistory
+				columns={columns}
+				data={data.getAllGalaPoints.points}
+				modalIsOpen={isOpen}
+				modalOnClose={onClose}
+				point={row}
+			/>
 		);
 	}
 	return null;
