@@ -32,7 +32,7 @@ const EditPoints: React.FC<Props> = ({
 				<ModalCloseButton />
 				<ModalBody>
 					<Form>
-						<MyDatePicker label="Fecha" name="date" />
+						<MyDatePicker label="Fecha" name="createdAt" />
 						<MyTextInput label="Razón" name="reason" />
 						<MyTextInput label="Cantidad" name="amount" type="number" />
 					</Form>

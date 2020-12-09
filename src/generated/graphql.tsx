@@ -156,6 +156,7 @@ export type MutationDeletePointsArgs = {
 export type MutationUpdatePointsArgs = {
   reason?: Maybe<Scalars['String']>;
   amount?: Maybe<Scalars['Float']>;
+  createdAt?: Maybe<Scalars['String']>;
   id: Scalars['String'];
 };
 
@@ -271,6 +272,7 @@ export type UpdatePointsMutationVariables = Exact<{
   id: Scalars['String'];
   reason?: Maybe<Scalars['String']>;
   amount?: Maybe<Scalars['Float']>;
+  createdAt?: Maybe<Scalars['String']>;
 }>;
 
 
@@ -693,8 +695,8 @@ export type RegisterUserMutationHookResult = ReturnType<typeof useRegisterUserMu
 export type RegisterUserMutationResult = Apollo.MutationResult<RegisterUserMutation>;
 export type RegisterUserMutationOptions = Apollo.BaseMutationOptions<RegisterUserMutation, RegisterUserMutationVariables>;
 export const UpdatePointsDocument = gql`
-    mutation UpdatePoints($id: String!, $reason: String, $amount: Float) {
-  updatePoints(id: $id, reason: $reason, amount: $amount) {
+    mutation UpdatePoints($id: String!, $reason: String, $amount: Float, $createdAt: String) {
+  updatePoints(id: $id, reason: $reason, amount: $amount, createdAt: $createdAt) {
     createdAt
     amount
     reason
@@ -719,6 +721,7 @@ export type UpdatePointsMutationFn = Apollo.MutationFunction<UpdatePointsMutatio
  *      id: // value for 'id'
  *      reason: // value for 'reason'
  *      amount: // value for 'amount'
+ *      createdAt: // value for 'createdAt'
  *   },
  * });
  */

@@ -6,6 +6,8 @@ import { useGetAllGalaPointsQuery } from "../../generated/graphql";
 import { useParams } from "react-router-dom";
 import { useDisclosure } from "@chakra-ui/react";
 import EditPointsContainer from "../EditPointsContainer";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPen } from "@fortawesome/free-solid-svg-icons";
 
 const EditButton: React.FC<any> = ({ handleClick, cell }) => {
 	return (
@@ -14,7 +16,7 @@ const EditButton: React.FC<any> = ({ handleClick, cell }) => {
 				handleClick(cell);
 			}}
 		>
-			Editar
+			<FontAwesomeIcon icon={faPen} />
 		</button>
 	);
 };

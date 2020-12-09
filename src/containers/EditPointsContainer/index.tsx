@@ -49,8 +49,9 @@ const EditPointsContainer: React.FC<Props> = ({
 			await updatePointsMutation({
 				variables: {
 					id: point.id,
+					createdAt: moment(values.createdAt).toISOString(),
 					amount: parseFloat(values.amount),
-					reason: moment(values.reason).toISOString(),
+					reason: values.reason,
 				},
 			});
 			refetch();
